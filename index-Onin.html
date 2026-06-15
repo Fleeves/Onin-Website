@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orin — Remember Where You Left Off</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --purple: #6023DD;
+
+      --dark: #080810;
+      --dark-2: #1F1F1F;
+
+      --light: #CCCFD6;
+      --light-2: #A4A7AE;
+
+      --bg: var(--dark);
+      --bg-soft: var(--dark-2);
+      --text: #F4F4F7;
+      --muted: #A4A7AE;
+      --line: rgba(255,255,255,0.10);
+      --tile: rgba(255,255,255,0.045);
+      --tile-strong: rgba(255,255,255,0.075);
+      --shadow: rgba(0,0,0,0.45);
+
+      --radius: 28px;
+      --radius-sm: 18px;
+      --max: 1180px;
+    }
+
+    html[data-theme="light"] {
+      --bg: var(--light);
+      --bg-soft: var(--light-2);
+      --text: #080810;
+      --muted: #3E4149;
+      --line: rgba(8,8,16,0.12);
+      --tile: rgba(255,255,255,0.36);
+      --tile-strong: rgba(255,255,255,0.58);
+      --shadow: rgba(8,8,16,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px),
+        radial-gradient(circle at 50% 0%, rgba(96,35,221,0.20), transparent 34%),
+        var(--bg);
+      background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%;
+      color: var(--text);
+      font-family: "Instrument Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+    }
+
+    .sys {
+      font-family: "Courier New", monospace;
+      letter-spacing: -0.04em;
+    }
+
+    .page {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(20px);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Courier New", monospace;
+      font-size: 15px;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      background: var(--tile);
+    }
+
+    .mark::after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: 0 0 32px rgba(96,35,221,0.8);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button, .button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--tile);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: -0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 180ms ease;
+    }
+
+    button:hover, .button:hover {
+      transform: translateY(-1px);
+      background: var(--tile-strong);
+    }
+
+    .primary {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: white;
+      box-shadow: 0 0 38px rgba(96,35,221,0.28);
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+    }
+
+    section {
+      padding: 84px 0;
+    }
+
+    .hero {
+      min-height: calc(100vh - 76px);
+      display: grid;
+      align-items: center;
+      padding-top: 56px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .tile {
+      background: var(--tile);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 80px var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      padding: clamp(32px, 6vw, 70px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 650px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      margin-bottom: 34px;
+    }
+
+    h1 {
+      font-size: clamp(58px, 8vw, 120px);
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+      margin: 0;
+      font-weight: 600;
+      max-width: 780px;
+    }
+
+    h1 span {
+      color: var(--muted);
+    }
+
+    .hero-sub {
+      font-size: clamp(19px, 2.2vw, 28px);
+      line-height: 1.15;
+      letter-spacing: -0.045em;
+      max-width: 610px;
+      color: var(--muted);
+      margin: 34px 0 0;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .waitlist {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      margin-top: 44px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 76%, transparent);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 16px 18px;
+      font: 500 14px "Instrument Sans", sans-serif;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    .video-tile {
+      position: relative;
+      min-height: 650px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+    }
+
+    .video-box {
+      flex: 1;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(96,35,221,0.24), transparent 34%),
+        linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sphere {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255,255,255,0.24), transparent 24%),
+        radial-gradient(circle at 50% 50%, rgba(96,35,221,0.88), rgba(96,35,221,0.08) 68%, transparent 70%);
+      box-shadow: 0 0 90px rgba(96,35,221,0.45);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.92; }
+      50% { transform: scale(1.045); opacity: 1; }
+    }
+
+    .play {
+      position: absolute;
+      bottom: 26px;
+      left: 26px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .play-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--text);
+      color: var(--bg);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+    }
+
+    .video-meta {
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: -0.04em;
+    }
+
+    .statement {
+      max-width: 910px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: clamp(38px, 6vw, 78px);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .lead {
+      font-size: clamp(19px, 2vw, 27px);
+      line-height: 1.25;
+      letter-spacing: -0.045em;
+      color: var(--muted);
+      margin: 28px auto 0;
+      max-width: 760px;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .content-tile {
+      padding: clamp(28px, 4vw, 48px);
+    }
+
+    .content-tile h3 {
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      margin: 0 0 26px;
+      font-weight: 600;
+    }
+
+    .content-tile p,
+    .content-tile li {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.48;
+      letter-spacing: -0.025em;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 24px 0 0;
+    }
+
+    .quote {
+      font-size: clamp(28px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.065em;
+      margin: 0;
+    }
+
+    .quote span {
+      color: var(--purple);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .mini {
+      padding: 24px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--tile);
+      min-height: 210px;
+    }
+
+    .mini .num {
+      font-family: "Courier New", monospace;
+      color: var(--purple);
+      font-size: 13px;
+      margin-bottom: 36px;
+    }
+
+    .mini h4 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.045em;
+    }
+
+    .mini p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+      letter-spacing: -0.025em;
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: var(--text);
+      background: var(--tile);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: -0.04em;
+    }
+
+    .final {
+      text-align: center;
+      padding-bottom: 110px;
+    }
+
+    .final .tile {
+      padding: clamp(34px, 7vw, 82px);
+    }
+
+    .final-form {
+      max-width: 620px;
+      margin: 40px auto 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 0;
+      color: var(--muted);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: -0.04em;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .two,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .video-tile {
+        min-height: auto;
+      }
+
+      .video-box {
+        min-height: 430px;
+      }
+
+      .waitlist,
+      .final-form {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-actions .button {
+        display: none;
+      }
+
+      section {
+        padding: 58px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="page nav-inner">
+      <div class="brand">
+        <div class="mark"></div>
+        <span>Orin</span>
+      </div>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">◐</button>
+        <a class="button primary" href="#waitlist">Join Waitlist</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero page">
+      <div class="hero-grid">
+        <div class="tile hero-copy">
+          <div>
+            <div class="eyebrow">Project-centric computing / Early access</div>
+
+            <h1>
+              The files are still there.<br>
+              <span>The context is gone.</span>
+            </h1>
+
+            <p class="hero-sub">
+              <strong>Orin remembers where you left off.</strong><br>
+              Pause any project. Come back hours, days or weeks later. Resume instantly.
+            </p>
+          </div>
+
+          <form class="waitlist" id="topForm">
+            <input type="email" name="email" placeholder="Email address" required />
+            <input type="tel" name="phone" placeholder="Phone number" />
+            <button class="primary" type="submit">Join</button>
+          </form>
+        </div>
+
+        <div class="tile video-tile">
+          <div class="video-box">
+            <!-- Replace this block with your real video:
+            <video src="demo.mp4" controls playsinline poster="poster.jpg"></video>
+            -->
+            <div class="sphere"></div>
+
+            <a href="#demo" class="play button">
+              <span class="play-dot">▶</span>
+              Watch demo
+            </a>
+          </div>
+
+          <div class="video-meta">
+            <span class="sys">DEMO_PREVIEW</span>
+            <span class="sys">00:42</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="statement">
+        <h2>You're trying to reconstruct something the computer didn't save.</h2>
+        <p class="lead">
+          The data survived. The thread didn't.
+        </p>
+      </div>
+    </section>
+
+    <section class="page two">
+      <div class="tile content-tile">
+        <h3>You know this feeling.</h3>
+        <p>
+          You open your computer. The files are there. The tabs are there.
+          The documents, the code, the applications — everything exactly where you left it.
+        </p>
+        <p>
+          And yet you stare at the screen. A few seconds. Then a minute.
+          Then several.
+        </p>
+        <ul>
+          <li>What was I actually doing?</li>
+          <li>Why did I make that choice?</li>
+          <li>Which of these forty tabs mattered?</li>
+          <li>What was the next step?</li>
+        </ul>
+      </div>
+
+      <div class="tile content-tile">
+        <p class="quote">
+          This is not a search problem.<br><br>
+          It is a <span>continuity</span> problem.
+        </p>
+      </div>
+    </section>
+
+    <section class="page two">
+      <div class="tile content-tile">
+        <h3>Computers were built for storage.</h3>
+        <p>
+          Files. Folders. Applications. Windows. Directories.
+        </p>
+        <p>
+          That is how your computer organizes work.
+        </p>
+      </div>
+
+      <div class="tile content-tile">
+        <h3>You need momentum.</h3>
+        <p>
+          Projects. Goals. Decisions. Questions. Progress. Intent.
+        </p>
+        <p>
+          That is how you actually think about work.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="tile content-tile">
+        <h3>Meet Orin.</h3>
+        <p>
+          Orin wraps around the tools you already use and organizes your work
+          the way you do: by project, not by file.
+        </p>
+
+        <p>
+          Instead of asking <strong>“Where is the file?”</strong>,
+          you ask <strong>“Where was I?”</strong>
+        </p>
+
+        <p>
+          And Orin brings back not just the documents — but the state,
+          the relationships, the open questions, and the next step.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="statement">
+        <h2>Stop reconstructing. Start resuming.</h2>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini">
+          <div class="num">01</div>
+          <h4>Find</h4>
+          <p>Locate files, apps, documents and resources connected to your work.</p>
+        </div>
+
+        <div class="mini">
+          <div class="num">02</div>
+          <h4>Understand</h4>
+          <p>See decisions, dependencies, key files and open questions surfaced clearly.</p>
+        </div>
+
+        <div class="mini">
+          <div class="num">03</div>
+          <h4>Resume</h4>
+          <p>Restore the right tools, the right place and the right context in seconds.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page two">
+      <div class="tile content-tile">
+        <h3>For anyone whose work depends on momentum.</h3>
+
+        <div class="roles">
+          <span class="chip">Developers</span>
+          <span class="chip">Researchers</span>
+          <span class="chip">Founders</span>
+          <span class="chip">Consultants</span>
+          <span class="chip">Analysts</span>
+          <span class="chip">Designers</span>
+          <span class="chip">Writers</span>
+          <span class="chip">Students</span>
+        </div>
+      </div>
+
+      <div class="tile content-tile">
+        <p class="quote">
+          No reconstruction.<br>
+          No tab archaeology.<br>
+          No mental warm-up.<br><br>
+          Just <span>momentum.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="page final" id="waitlist">
+      <div class="tile">
+        <div class="eyebrow">Limited early access</div>
+        <h2>Be among the first.</h2>
+        <p class="lead">
+          Join the waitlist and help shape the future of project-centric computing.
+        </p>
+
+        <form class="final-form" id="bottomForm">
+          <input type="email" name="email" placeholder="Email address" required />
+          <button class="primary" type="submit">Request early access</button>
+        </form>
+
+        <p class="lead sys" style="font-size:13px;margin-top:22px;">
+          No spam. No newsletters. Just an invitation when Orin is ready.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page footer-inner">
+      <span>© 2026 Orin</span>
+      <span>Built for people who think in projects, not files.</span>
+    </div>
+  </footer>
+
+  <script>
+    const root = document.documentElement;
+    const toggle = document.getElementById("themeToggle");
+
+    toggle.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme");
+      root.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    });
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      console.log("Waitlist signup:", data);
+
+      const button = form.querySelector("button");
+      const original = button.textContent;
+
+      button.textContent = "Received";
+      button.disabled = true;
+
+      setTimeout(() => {
+        button.textContent = original;
+        button.disabled = false;
+        form.reset();
+      }, 1800);
+    }
+
+    document.getElementById("topForm").addEventListener("submit", handleSubmit);
+    document.getElementById("bottomForm").addEventListener("submit", handleSubmit);
+  </script>
+</body>
+</html>
