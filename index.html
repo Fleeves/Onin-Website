@@ -535,9 +535,9 @@ col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.20);
 col=smoothstep(vec3f(.02),vec3f(.98),col);
 col+=vec3f((h21(uv*u.r+t)-.5)*.013);
 }else{
-let bg=vec3f(0.800,0.812,0.839);
+let bg=vec3f(0.845,0.855,0.885);
 col=bg;
-let nt=vec3f(.376,.137,.867);
+let nt=vec3f(.455,.235,.930);
 col=mix(col,mix(p1,nt,.35),v0*.46);
 col=mix(col,mix(p2,nt,.45),f0*.34*br);
 col=mix(col,mix(p3,nt,.25),v1*.32);
