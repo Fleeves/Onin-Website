@@ -1,763 +1,520 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orin — Remember Where You Left Off</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --purple: #6023DD;
-
-      --dark: #080810;
-      --dark-2: #1F1F1F;
-
-      --light: #CCCFD6;
-      --light-2: #A4A7AE;
-
-      --bg: var(--dark);
-      --bg-soft: var(--dark-2);
-      --text: #F4F4F7;
-      --muted: #A4A7AE;
-      --line: rgba(255,255,255,0.10);
-      --tile: rgba(255,255,255,0.045);
-      --tile-strong: rgba(255,255,255,0.075);
-      --shadow: rgba(0,0,0,0.45);
-
-      --radius: 28px;
-      --radius-sm: 18px;
-      --max: 1180px;
-    }
-
-    html[data-theme="light"] {
-      --bg: var(--light);
-      --bg-soft: var(--light-2);
-      --text: #080810;
-      --muted: #3E4149;
-      --line: rgba(8,8,16,0.12);
-      --tile: rgba(255,255,255,0.36);
-      --tile-strong: rgba(255,255,255,0.58);
-      --shadow: rgba(8,8,16,0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px),
-        radial-gradient(circle at 50% 0%, rgba(96,35,221,0.20), transparent 34%),
-        var(--bg);
-      background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%;
-      color: var(--text);
-      font-family: "Instrument Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      letter-spacing: 0.01em;
-      overflow-x: hidden;
-    }
-
-    .sys {
-      font-family: "Courier New", monospace;
-      letter-spacing: -0.04em;
-    }
-
-    .page {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(20px);
-      background: color-mix(in srgb, var(--bg) 78%, transparent);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .nav-inner {
-      height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: "Courier New", monospace;
-      font-size: 15px;
-      letter-spacing: -0.05em;
-      text-transform: uppercase;
-    }
-
-    .mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1px solid var(--line);
-      display: grid;
-      place-items: center;
-      background: var(--tile);
-    }
-
-    .mark::after {
-      content: "";
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--purple);
-      box-shadow: 0 0 32px rgba(96,35,221,0.8);
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    button, .button {
-      appearance: none;
-      border: 1px solid var(--line);
-      background: var(--tile);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 13px 20px;
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      letter-spacing: -0.04em;
-      cursor: pointer;
-      text-decoration: none;
-      transition: 180ms ease;
-    }
-
-    button:hover, .button:hover {
-      transform: translateY(-1px);
-      background: var(--tile-strong);
-    }
-
-    .primary {
-      background: var(--purple);
-      border-color: var(--purple);
-      color: white;
-      box-shadow: 0 0 38px rgba(96,35,221,0.28);
-    }
-
-    .theme-toggle {
-      width: 44px;
-      height: 44px;
-      padding: 0;
-    }
-
-    section {
-      padding: 84px 0;
-    }
-
-    .hero {
-      min-height: calc(100vh - 76px);
-      display: grid;
-      align-items: center;
-      padding-top: 56px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .tile {
-      background: var(--tile);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: 0 24px 80px var(--shadow);
-      overflow: hidden;
-    }
-
-    .hero-copy {
-      padding: clamp(32px, 6vw, 70px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 650px;
-    }
-
-    .eyebrow {
-      color: var(--muted);
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      margin-bottom: 34px;
-    }
-
-    h1 {
-      font-size: clamp(58px, 8vw, 120px);
-      line-height: 0.88;
-      letter-spacing: -0.075em;
-      margin: 0;
-      font-weight: 600;
-      max-width: 780px;
-    }
-
-    h1 span {
-      color: var(--muted);
-    }
-
-    .hero-sub {
-      font-size: clamp(19px, 2.2vw, 28px);
-      line-height: 1.15;
-      letter-spacing: -0.045em;
-      max-width: 610px;
-      color: var(--muted);
-      margin: 34px 0 0;
-    }
-
-    .hero-sub strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .waitlist {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 10px;
-      margin-top: 44px;
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--bg) 76%, transparent);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 16px 18px;
-      font: 500 14px "Instrument Sans", sans-serif;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: var(--muted);
-    }
-
-    .video-tile {
-      position: relative;
-      min-height: 650px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 22px;
-    }
-
-    .video-box {
-      flex: 1;
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(96,35,221,0.24), transparent 34%),
-        linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sphere {
-      width: 210px;
-      height: 210px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.22);
-      background:
-        radial-gradient(circle at 35% 25%, rgba(255,255,255,0.24), transparent 24%),
-        radial-gradient(circle at 50% 50%, rgba(96,35,221,0.88), rgba(96,35,221,0.08) 68%, transparent 70%);
-      box-shadow: 0 0 90px rgba(96,35,221,0.45);
-      animation: pulse 4s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.92; }
-      50% { transform: scale(1.045); opacity: 1; }
-    }
-
-    .play {
-      position: absolute;
-      bottom: 26px;
-      left: 26px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      color: var(--text);
-    }
-
-    .play-dot {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--text);
-      color: var(--bg);
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-    }
-
-    .video-meta {
-      padding-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: -0.04em;
-    }
-
-    .statement {
-      max-width: 910px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: clamp(38px, 6vw, 78px);
-      line-height: 0.95;
-      letter-spacing: -0.07em;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .lead {
-      font-size: clamp(19px, 2vw, 27px);
-      line-height: 1.25;
-      letter-spacing: -0.045em;
-      color: var(--muted);
-      margin: 28px auto 0;
-      max-width: 760px;
-    }
-
-    .two {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .content-tile {
-      padding: clamp(28px, 4vw, 48px);
-    }
-
-    .content-tile h3 {
-      font-size: clamp(28px, 3.5vw, 48px);
-      line-height: 1;
-      letter-spacing: -0.06em;
-      margin: 0 0 26px;
-      font-weight: 600;
-    }
-
-    .content-tile p,
-    .content-tile li {
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.48;
-      letter-spacing: -0.025em;
-    }
-
-    ul {
-      padding-left: 20px;
-      margin: 24px 0 0;
-    }
-
-    .quote {
-      font-size: clamp(28px, 4vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -0.065em;
-      margin: 0;
-    }
-
-    .quote span {
-      color: var(--purple);
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .mini {
-      padding: 24px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--line);
-      background: var(--tile);
-      min-height: 210px;
-    }
-
-    .mini .num {
-      font-family: "Courier New", monospace;
-      color: var(--purple);
-      font-size: 13px;
-      margin-bottom: 36px;
-    }
-
-    .mini h4 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      letter-spacing: -0.045em;
-    }
-
-    .mini p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.4;
-      letter-spacing: -0.025em;
-    }
-
-    .roles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 28px;
-    }
-
-    .chip {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 12px 16px;
-      color: var(--text);
-      background: var(--tile);
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      letter-spacing: -0.04em;
-    }
-
-    .final {
-      text-align: center;
-      padding-bottom: 110px;
-    }
-
-    .final .tile {
-      padding: clamp(34px, 7vw, 82px);
-    }
-
-    .final-form {
-      max-width: 620px;
-      margin: 40px auto 0;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 32px 0;
-      color: var(--muted);
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: -0.04em;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid,
-      .two,
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-copy,
-      .video-tile {
-        min-height: auto;
-      }
-
-      .video-box {
-        min-height: 430px;
-      }
-
-      .waitlist,
-      .final-form {
-        grid-template-columns: 1fr;
-      }
-
-      .nav-actions .button {
-        display: none;
-      }
-
-      section {
-        padding: 58px 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orin — The files are still there. The context is gone.</title>
+    <meta name="description" content="Orin remembers where you left off. Your computer remembers your files. It's time it remembered your work.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#080810;--bg-variant:#1F1F1F;--text:#CCCFD6;--text-variant:#A4A7AE;
+            --accent:#6023DD;--accent-glow:rgba(96,35,221,.35);
+            --border-subtle:rgba(204,207,214,.08);--border-strong:rgba(204,207,214,.14);
+            --tile-bg:#1F1F1F;--input-bg:#12121a;--input-border:rgba(204,207,214,.12);
+            --rule:rgba(204,207,214,.1);--overlay:rgba(8,8,16,.88);
+        }
+        [data-theme="light"] {
+            --bg:#CCCFD6;--bg-variant:#A4A7AE;--text:#080810;--text-variant:#2a2a30;
+            --accent:#6023DD;--accent-glow:rgba(96,35,221,.25);
+            --border-subtle:rgba(8,8,16,.06);--border-strong:rgba(8,8,16,.1);
+            --tile-bg:#A4A7AE;--input-bg:#bcc0c8;--input-border:rgba(8,8,16,.1);
+            --rule:rgba(8,8,16,.08);--overlay:rgba(204,207,214,.88);
+        }
+
+        /* ═══ View Transitions API — Theme Crossfade ═══ */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation-duration: 2.4s;
+            animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+        }
+
+        ::view-transition-old(root) {
+            animation-name: fade-out;
+        }
+        ::view-transition-new(root) {
+            animation-name: fade-in;
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        ::view-transition-old(root){
+            z-index:1;
+        }
+
+        ::view-transition-new(root){
+            z-index:2;
+        }
+
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        body{
+            font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+            font-weight:450;font-stretch:90%;letter-spacing:.0625rem;line-height:1.6;
+            color:var(--text);background:var(--bg);min-height:100vh;
+            position:relative;
+            overflow-x:hidden;
+        }
+
+        body,
+        .tile,
+        .waitlist-input,
+        .btn-ghost,
+        .theme-toggle,
+        .hero-transition,
+        .cta-section,
+        .site-header,
+        .section,
+        .section-body,
+        .section-heading,
+        .footer-text,
+        .footer-links a{
+            transition:
+                background-color 1.2s cubic-bezier(.22,1,.36,1),
+                color 1.2s cubic-bezier(.22,1,.36,1),
+                border-color 1.2s cubic-bezier(.22,1,.36,1),
+                box-shadow 1.2s cubic-bezier(.22,1,.36,1),
+                opacity 1.2s cubic-bezier(.22,1,.36,1);
+        }
+        .section-inner{max-width:none;width:min(1400px,100vw);margin:0 auto 0 calc(50% - 700px - 2.5rem);padding:0}
+        @media(max-width:640px){.section-inner{padding:0 .75rem}}
+        .system{font-family:'Courier New',Courier,monospace;letter-spacing:.04em;font-weight:400}
+        h1,h2{font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:500;font-stretch:85%;letter-spacing:.02em;line-height:1.15;color:var(--text)}
+        .site-header{
+            position:absolute;top:0;left:0;right:0;z-index:10;
+            background:transparent;border:none;pointer-events:none;
+        }
+        .header-inner{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:2rem 2.5rem;width:100%;pointer-events:none;
+        }
+        .header-inner > *{pointer-events:auto}
+        @media(max-width:640px){.header-inner{padding:.85rem 1.25rem}}
+        .logo{display:flex;align-items:center;text-decoration:none}
+        .logo img{display:block}
+        .logo-dark,.logo-light{height:34px;width:auto}
+        html[data-theme="dark"] .logo-dark{display:block}
+        html[data-theme="dark"] .logo-light{display:none}
+        html[data-theme="light"] .logo-dark{display:none}
+        html[data-theme="light"] .logo-light{display:block}
+        .theme-toggle{
+            width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+            color:var(--text);font-size:18px;transition:all .6s cubic-bezier(.22,1,.36,1);
+        }
+        .theme-toggle:hover{transform:translateY(-1px);background:rgba(96,35,221,.12)}
+        [data-theme="light"] .theme-toggle{background:rgba(8,8,16,.12)}
+        [data-theme="light"] .theme-toggle:hover{background:rgba(8,8,16,.18)}
+        .btn{display:inline-flex;align-items:center;justify-content:center;font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:500;font-stretch:88%;letter-spacing:.04em;font-size:.9rem;padding:.85rem 2rem;border-radius:100px;text-decoration:none;cursor:pointer;border:none;white-space:nowrap;line-height:1;transition:transform .2s ease,box-shadow .2s ease}
+        .btn-primary{background:var(--accent);color:#fff}
+        .btn-primary:hover{box-shadow:0 0 24px var(--accent-glow),0 4px 20px rgba(96,35,221,.3);transform:translateY(-1px)}
+        .btn-primary:active{transform:translateY(0);box-shadow:0 0 12px var(--accent-glow)}
+        .btn-ghost{background:rgba(255,255,255,.04);color:var(--text);border:none}
+        .btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:rgba(96,35,221,.06)}
+        @media(max-width:640px){.btn{font-size:.85rem;padding:.75rem 1.5rem}}
+
+        .section{padding:6rem 0}
+        @media(max-width:1024px){.section{padding:4.5rem 0}}
+        @media(max-width:640px){.section{padding:3rem 0}}
+
+        .two-col{display:grid;grid-template-columns:minmax(320px,1fr) 44rem;gap:7rem;align-items:start}
+        .two-col>div:first-child{
+            text-align:right;
+        }
+        .two-col>div:last-child{
+            padding-top:.6rem;
+        }
+        @media(max-width:768px){.two-col{grid-template-columns:1fr;gap:2rem}}
+
+        .section-heading{font-size:clamp(1.75rem,3vw,2.25rem);font-weight:500;font-stretch:85%;letter-spacing:.02em;line-height:1.2;margin-bottom:1.25rem}
+
+        .tile{background:var(--tile-bg);border-radius:1rem;padding:2.5rem;border:1px solid var(--border-subtle)}
+        @media(max-width:640px){.tile{padding:1.5rem}}
+        .rule{border:none;height:1px;background:var(--rule);margin:0}
+        .hero{
+            height:100vh;min-height:100vh;display:flex;align-items:center;
+            justify-content:center;position:relative;overflow:hidden;
+        }
+        @supports(height:100dvh){.hero{height:100dvh;min-height:100dvh}}
+        .hero-transition{
+            position:absolute;left:0;right:0;bottom:0;height:24vh;z-index:2;
+            pointer-events:none;
+            background:linear-gradient(to bottom,
+                rgba(8,8,16,0) 0%,
+                rgba(8,8,16,.08) 25%,
+                rgba(8,8,16,.22) 55%,
+                var(--bg) 100%);
+        }
+        [data-theme="light"] .hero-transition{
+            background:linear-gradient(to bottom,
+                rgba(204,207,214,0) 0%,
+                rgba(204,207,214,.10) 25%,
+                rgba(204,207,214,.30) 55%,
+                var(--bg) 100%);
+        }
+        .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:#080810}
+        .hero-bg canvas{width:100%;height:100%;display:block}
+        .hero-bg::after{content:'';position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 50% 45%,rgba(8,8,16,.08),transparent 32%),linear-gradient(to bottom,rgba(8,8,16,.08),rgba(8,8,16,.22));pointer-events:none}
+        .webgpu-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,rgba(96,35,221,.24),transparent 36%),#080810;color:rgba(204,207,214,.48);font-family:'Courier New',Courier,monospace;font-size:.72rem;letter-spacing:.08em;z-index:0}
+        .webgpu-fallback.visible{display:flex}
+.hero-content{
+    position:relative;
+    z-index:1;
+    text-shadow:0 18px 70px rgba(8,8,16,.72);
+    margin:0 auto !important;
+    width:auto;
+}
+        .fullscreen-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+        .fullscreen-section .section-inner{max-width:none;width:100%;display:flex;justify-content:center;align-items:center;text-align:center;padding:0 4vw}
+        .teaser-copy{font-size:clamp(2rem,3.8vw,4rem);line-height:1.45;letter-spacing:1pt;width:auto;max-width:none;text-align:center}
+        .video-stage{width:100%;height:min(78vh,900px);border-radius:1.5rem;border:1px solid var(--border-subtle);background:var(--tile-bg);display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',monospace;letter-spacing:.08em}
+        .hero-headline{font-size:clamp(2.75rem,5.5vw,4.75rem);font-weight:500;font-stretch:80%;letter-spacing:1pt;line-height:1.08;margin-bottom:1.5rem}
+        .hero-headline em{font-style:italic;font-weight:400;color:var(--text-variant)}
+        .hero-sub{font-size:1.2rem;font-weight:400;font-stretch:95%;letter-spacing:1pt;line-height:1.55;color:var(--text-variant);margin-bottom:2.5rem;max-width:36rem}
+        .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .section-body{font-size:1.05rem;font-weight:400;font-stretch:92%;letter-spacing:.045em;line-height:1.65;color:var(--text-variant);max-width:34rem}
+        .section-body+.section-body{margin-top:.9rem}
+        .thread-list{list-style:none;padding:0;margin:1.5rem 0 0}
+        .thread-list li{font-size:1.05rem;font-weight:450;font-stretch:90%;letter-spacing:.04em;line-height:1.7;color:var(--text-variant);padding-left:1.5rem;position:relative}
+        .thread-list li::before{content:'';position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.55}
+        .cmd{font-family:'Courier New',Courier,monospace;font-size:.85em;letter-spacing:.05em;color:var(--accent);background:rgba(96,35,221,.08);padding:.15em .4em;border-radius:4px}
+        .waitlist-form{display:flex;gap:.75rem;max-width:30rem;flex-wrap:wrap}
+        .waitlist-input{flex:1;min-width:14rem;font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:450;font-stretch:90%;letter-spacing:.04em;font-size:.9rem;padding:.85rem 1.5rem;border-radius:100px;border:none;background:var(--input-bg);color:var(--text);outline:none}
+        .waitlist-input::placeholder{color:var(--text-variant);opacity:.5}
+        .waitlist-input:focus{box-shadow:0 0 0 3px rgba(96,35,221,.1)}
+        .audience-list{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem 1rem;list-style:none;padding:0;margin-top:.5rem}
+        @media(max-width:640px){.audience-list{grid-template-columns:repeat(2,1fr)}}
+        .audience-list li{font-size:1rem;font-weight:450;font-stretch:90%;letter-spacing:.04em;color:var(--text-variant);padding:.55rem 0;opacity:.85;transition:color .2s ease,opacity .2s ease,transform .2s ease}
+        .audience-list li:hover{color:var(--accent);opacity:1;transform:translateX(2px)}
+
+        .cta-section{
+            position:relative;min-height:100vh;display:flex;align-items:center;
+            overflow:hidden;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(96,35,221,.06) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(96,35,221,.04) 0%, transparent 60%),
+                var(--bg);
+        }
+        .cta-gradient{
+            position:absolute;top:0;left:0;right:0;height:28vh;z-index:1;
+            pointer-events:none;
+            background:linear-gradient(to bottom,var(--bg) 0%,rgba(8,8,16,.75) 30%,rgba(8,8,16,.25) 65%,transparent 100%);
+        }
+        [data-theme="light"] .cta-gradient{
+            background:linear-gradient(to bottom,var(--bg) 0%,rgba(204,207,214,.80) 30%,rgba(204,207,214,.25) 65%,transparent 100%);
+        }
+        .cta-content{position:relative;z-index:2}
+        .site-footer{padding:2.5rem 0;border-top:1px solid var(--border-subtle)}
+        .footer-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+        @media(max-width:640px){.footer-inner{padding:0 1.25rem;flex-direction:column;align-items:flex-start}}
+        .footer-text{font-family:'Courier New',Courier,monospace;font-size:.75rem;letter-spacing:.06em;color:var(--text-variant);opacity:.6}
+        .footer-links{display:flex;gap:1.5rem}
+        .footer-links a{font-family:'Courier New',Courier,monospace;font-size:.75rem;letter-spacing:.06em;color:var(--text-variant);text-decoration:none;opacity:.6}
+        .footer-links a:hover{opacity:1;color:var(--accent)}
+        strong{font-weight:550;font-stretch:85%;color:var(--text)}
+        ::selection{background:rgba(96,35,221,.25);color:var(--text)}
+
+        @media(max-width:640px){
+            .waitlist-form{
+                flex-direction:column;
+                max-width:100%;
+            }
+            .waitlist-form .btn,
+            .waitlist-input{
+                width:100%;
+                max-width:100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <nav>
-    <div class="page nav-inner">
-      <div class="brand">
-        <div class="mark"></div>
-        <span>Orin</span>
-      </div>
 
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">◐</button>
-        <a class="button primary" href="#waitlist">Join Waitlist</a>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <section class="hero page">
-      <div class="hero-grid">
-        <div class="tile hero-copy">
-          <div>
-            <div class="eyebrow">Project-centric computing / Early access</div>
-
-            <h1>
-              The files are still there.<br>
-              <span>The context is gone.</span>
-            </h1>
-
-            <p class="hero-sub">
-              <strong>Orin remembers where you left off.</strong><br>
-              Pause any project. Come back hours, days or weeks later. Resume instantly.
-            </p>
-          </div>
-
-          <form class="waitlist" id="topForm">
-            <input type="email" name="email" placeholder="Email address" required />
-            <input type="tel" name="phone" placeholder="Phone number" />
-            <button class="primary" type="submit">Join</button>
-          </form>
+    <section class="hero">
+        <header class="site-header">
+            <div class="header-inner">
+                <a href="#" class="logo" aria-label="Orin home">
+                    <img class="logo-dark" src="Onin_Logo_text_LightOnDark.png" alt="Orin">
+                    <img class="logo-light" src="Onin_Logo_text_DarkOnLight.png" alt="Orin">
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+                    <span id="themeIcon">☀</span>
+                </button>
+            </div>
+        </header>
+        <div class="hero-bg"><canvas id="c" aria-hidden="true"></canvas><div id="fb" class="webgpu-fallback">WEBGPU UNAVAILABLE</div></div>
+        <div class="hero-transition"></div>
+        <div class="section-inner hero-content">
+            <h1 class="hero-headline">The files are <em>still there.</em><br>The context is <em>gone.</em></h1>
+            <p class="hero-sub">Orin remembers where you left off.</p>
+            <div class="hero-actions">
+              <a href="#demo-video" class="btn btn-ghost">Watch Demo</a>
+              <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">
+                  Join the Waitlist
+              </button>
+            </div>
         </div>
+    </section>
 
-        <div class="tile video-tile">
-          <div class="video-box">
-            <!-- Replace this block with your real video:
-            <video src="demo.mp4" controls playsinline poster="poster.jpg"></video>
-            -->
-            <div class="sphere"></div>
-
-            <a href="#demo" class="play button">
-              <span class="play-dot">▶</span>
-              Watch demo
-            </a>
-          </div>
-
-          <div class="video-meta">
-            <span class="sys">DEMO_PREVIEW</span>
-            <span class="sys">00:42</span>
-          </div>
+    <section class="fullscreen-section"><div class="section-inner"><h2 class="teaser-copy">You're losing time reconstructing...<br>something your computer <span style="color:#6023DD;">never</span> saved.</h2></div></section>
+    <section id="demo-video" class="fullscreen-section">
+        <div class="section-inner" style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+        <p class="system"
+           style="font-size:.78rem;letter-spacing:.12em;opacity:.55;text-transform:uppercase;margin-bottom:2rem;width:100%;text-align:center;">
+            See Orin restore an entire project in seconds.
+        </p>
+        <div class="video-stage">
+            DEMO_VIDEO_PLACEHOLDER
         </div>
-      </div>
-    </section>
+    </div></section>
+    <hr class="rule">
 
-    <section class="page">
-      <div class="statement">
-        <h2>You're trying to reconstruct something the computer didn't save.</h2>
-        <p class="lead">
-          The data survived. The thread didn't.
-        </p>
-      </div>
-    </section>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">The data survived.<br>The thread didn't.</h2></div><div><p class="section-body">You open your computer.</p><p class="section-body">The files are there.</p><p class="section-body">The tabs are there.</p><p class="section-body">The documents are there.</p><p class="section-body">The code is there.</p><p class="section-body">Everything seems intact.</p><p class="section-body">And yet you can't continue.</p><p class="section-body">Because you're not looking for a file.</p><p class="section-body">You're trying to remember:</p><ul class="thread-list"><li>What was I doing?</li><li>Why did I make this decision?</li><li>Which of these tabs mattered?</li><li>What was the next step?</li></ul><p class="section-body" style="margin-top:1.5rem">The data survived.</p><p class="section-body"><strong>The thread didn't.</strong></p></div></div></div></section>
 
-    <section class="page two">
-      <div class="tile content-tile">
-        <h3>You know this feeling.</h3>
-        <p>
-          You open your computer. The files are there. The tabs are there.
-          The documents, the code, the applications — everything exactly where you left it.
-        </p>
-        <p>
-          And yet you stare at the screen. A few seconds. Then a minute.
-          Then several.
-        </p>
-        <ul>
-          <li>What was I actually doing?</li>
-          <li>Why did I make that choice?</li>
-          <li>Which of these forty tabs mattered?</li>
-          <li>What was the next step?</li>
-        </ul>
-      </div>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Every interruption has a cost.</h2></div><div><p class="section-body">A message.</p><p class="section-body">A meeting.</p><p class="section-body">A phone call.</p><p class="section-body">Another project.</p><p class="section-body">A weekend.</p><p class="section-body" style="margin-top:.9rem">You come back.</p><p class="section-body">And before you can do meaningful work, you have to rebuild the state of your thinking.</p><p class="section-body">Not because anything was lost.</p><p class="section-body"><strong>Because your computer never saved it.</strong></p></div></div></div></section>
 
-      <div class="tile content-tile">
-        <p class="quote">
-          This is not a search problem.<br><br>
-          It is a <span>continuity</span> problem.
-        </p>
-      </div>
-    </section>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Computers remember information.<br>People need continuity.</h2></div><div><p class="section-body">Computers were built around:</p><p class="section-body"><span class="cmd">Files.</span> <span class="cmd">Folders.</span> <span class="cmd">Applications.</span> <span class="cmd">Windows.</span> <span class="cmd">Storage.</span></p><p class="section-body" style="margin-top:.9rem">People think in:</p><p class="section-body">Projects. Questions. Decisions. Progress. Intent. Momentum.</p><p class="section-body" style="margin-top:.9rem">Your computer remembers where everything is.</p><p class="section-body"><strong>It doesn't remember where you were.</strong></p></div></div></div></section>
 
-    <section class="page two">
-      <div class="tile content-tile">
-        <h3>Computers were built for storage.</h3>
-        <p>
-          Files. Folders. Applications. Windows. Directories.
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Meet Orin.</h2></div><div>
+        <p class="section-body">
+            Orin organizes your computer around projects instead of files.
         </p>
-        <p>
-          That is how your computer organizes work.
+        <p class="section-body">
+            It wraps around the tools you already use and preserves the context that normally disappears between work sessions.
         </p>
-      </div>
+        <p class="section-body">
+            So when you come back, you continue instead of reconstructing.
+        </p>
+        <div class="tile" style="margin-top:2rem"><p style="font-family:'Courier New',Courier,monospace;font-size:.8rem;letter-spacing:.08em;color:var(--text-variant);opacity:.6;margin-bottom:.75rem;text-transform:uppercase">Instead of asking</p><p style="font-size:1.2rem;font-weight:450;font-stretch:90%;letter-spacing:.04em;color:var(--text-variant)">&ldquo;Where is the file?&rdquo;</p><p style="font-family:'Courier New',Courier,monospace;font-size:.8rem;letter-spacing:.08em;color:var(--accent);margin-top:1.5rem;margin-bottom:.75rem;text-transform:uppercase">You ask</p><p style="font-size:1.2rem;font-weight:500;font-stretch:85%;letter-spacing:.03em;color:var(--text)">&ldquo;Where was I?&rdquo;</p></div><p class="section-body" style="margin-top:1.5rem">And Orin helps you continue.</p></div></div></div></section>
 
-      <div class="tile content-tile">
-        <h3>You need momentum.</h3>
-        <p>
-          Projects. Goals. Decisions. Questions. Progress. Intent.
-        </p>
-        <p>
-          That is how you actually think about work.
-        </p>
-      </div>
-    </section>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Imagine this.</h2></div><div><p class="section-body">You stop working on a project.</p><p class="section-body">For an hour.</p><p class="section-body">For a day.</p><p class="section-body">For a week.</p><p class="section-body" style="margin-top:.9rem">Then you come back.</p><p class="section-body">No digging through folders.</p><p class="section-body">No reopening dozens of tabs.</p><p class="section-body">No retracing your steps.</p><p class="section-body">No mental warm-up.</p><p class="section-body" style="margin-top:.9rem"><strong>You simply continue.</strong></p></div></div></div></section>
 
-    <section class="page">
-      <div class="tile content-tile">
-        <h3>Meet Orin.</h3>
-        <p>
-          Orin wraps around the tools you already use and organizes your work
-          the way you do: by project, not by file.
-        </p>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Built for people whose<br>work depends on momentum.</h2></div><div><ul class="audience-list"><li>&lt;/&gt; Developers.</li><li>∑ Researchers.</li><li>△ Founders.</li><li>◇ Consultants.</li><li>◈ Analysts.</li><li>✦ Designers.</li><li>✎ Writers.</li><li>◎ Students.</li></ul><p class="section-body" style="margin-top:1rem">Anyone managing complex work across interruptions.</p></div></div></div></section>
 
-        <p>
-          Instead of asking <strong>“Where is the file?”</strong>,
-          you ask <strong>“Where was I?”</strong>
-        </p>
-
-        <p>
-          And Orin brings back not just the documents — but the state,
-          the relationships, the open questions, and the next step.
-        </p>
-      </div>
-    </section>
-
-    <section class="page">
-      <div class="statement">
-        <h2>Stop reconstructing. Start resuming.</h2>
-      </div>
-
-      <div class="mini-grid">
-        <div class="mini">
-          <div class="num">01</div>
-          <h4>Find</h4>
-          <p>Locate files, apps, documents and resources connected to your work.</p>
+    <!-- CTA -->
+    <section class="cta-section" id="waitlist">
+        <div class="cta-gradient"></div>
+        <div class="section-inner cta-content">
+            <div class="two-col">
+                <div><h2 class="section-heading">Reclaim your momentum.</h2></div>
+                <div>
+                    <p class="section-body" style="margin-bottom:1.5rem">Your computer already remembers your files.</p>
+                    <p class="section-body" style="margin-bottom:1.5rem">It's time it remembered your work.</p>
+                    <form class="waitlist-form" onsubmit="event.preventDefault();handleSubmit(this)">
+                        <input type="email" class="waitlist-input" placeholder="Email Address" required aria-label="Email address">
+                        <button type="submit" class="btn btn-primary">Request Early Access</button>
+                    </form>
+                    <p class="system" style="font-size:.7rem;color:var(--text-variant);opacity:.5;margin-top:1rem;letter-spacing:.06em;line-height:1.7">
+                        Limited early access.<br>
+                        No spam.<br>
+                        Just an invitation when Orin is ready.
+                    </p>
+                    <p id="wc" style="display:none;font-family:'Courier New',Courier,monospace;font-size:.8rem;color:var(--accent);margin-top:1rem;letter-spacing:.04em">✓ You're on the list. Thank you.</p>
+                </div>
+            </div>
         </div>
-
-        <div class="mini">
-          <div class="num">02</div>
-          <h4>Understand</h4>
-          <p>See decisions, dependencies, key files and open questions surfaced clearly.</p>
-        </div>
-
-        <div class="mini">
-          <div class="num">03</div>
-          <h4>Resume</h4>
-          <p>Restore the right tools, the right place and the right context in seconds.</p>
-        </div>
-      </div>
     </section>
+    <hr class="rule">
 
-    <section class="page two">
-      <div class="tile content-tile">
-        <h3>For anyone whose work depends on momentum.</h3>
+    <footer class="site-footer"><div class="footer-inner"><span class="footer-text">&copy; 2026 Orin &mdash; Built for people who think in projects, not files.</span><div class="footer-links"><a href="#">Twitter / X</a><a href="#">Email</a><a href="#">Privacy</a></div></div></footer>
 
-        <div class="roles">
-          <span class="chip">Developers</span>
-          <span class="chip">Researchers</span>
-          <span class="chip">Founders</span>
-          <span class="chip">Consultants</span>
-          <span class="chip">Analysts</span>
-          <span class="chip">Designers</span>
-          <span class="chip">Writers</span>
-          <span class="chip">Students</span>
-        </div>
-      </div>
+    <script>
+    const html=document.documentElement,tt=document.getElementById('themeToggle');
+    const themeIcon=document.getElementById('themeIcon');
+    let theme=localStorage.getItem('orin-theme')==='light'?'light':'dark';
+    html.setAttribute('data-theme',theme);
+    themeIcon.textContent=theme==='dark'?'☀':'☾';
 
-      <div class="tile content-tile">
-        <p class="quote">
-          No reconstruction.<br>
-          No tab archaeology.<br>
-          No mental warm-up.<br><br>
-          Just <span>momentum.</span>
-        </p>
-      </div>
-    </section>
-
-    <section class="page final" id="waitlist">
-      <div class="tile">
-        <div class="eyebrow">Limited early access</div>
-        <h2>Be among the first.</h2>
-        <p class="lead">
-          Join the waitlist and help shape the future of project-centric computing.
-        </p>
-
-        <form class="final-form" id="bottomForm">
-          <input type="email" name="email" placeholder="Email address" required />
-          <button class="primary" type="submit">Request early access</button>
-        </form>
-
-        <p class="lead sys" style="font-size:13px;margin-top:22px;">
-          No spam. No newsletters. Just an invitation when Orin is ready.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="page footer-inner">
-      <span>© 2026 Orin</span>
-      <span>Built for people who think in projects, not files.</span>
-    </div>
-  </footer>
-
-  <script>
-    const root = document.documentElement;
-    const toggle = document.getElementById("themeToggle");
-
-    toggle.addEventListener("click", () => {
-      const current = root.getAttribute("data-theme");
-      root.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    /* ═══ View Transitions API — Theme Toggle ═══ */
+    tt.addEventListener('click', () => {
+        document.startViewTransition(() => {
+            theme = theme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', theme);
+            themeIcon.textContent = theme === 'dark' ? '☀' : '☾';
+            localStorage.setItem('orin-theme', theme);
+        });
     });
 
-    function handleSubmit(event) {
-      event.preventDefault();
+    function handleSubmit(f){const e=f.querySelector('input').value,b=f.querySelector('button'),c=document.getElementById('wc');if(e&&e.includes('@')){b.textContent='Added ✓';b.style.pointerEvents='none';b.style.opacity='0.7';c.style.display='block';f.querySelector('input').value='';setTimeout(()=>{b.textContent='Request Early Access';b.style.pointerEvents='auto';b.style.opacity='1';c.style.display='none'},4000)}}
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',function(e){const h=this.getAttribute('href');if(h==='#')return;e.preventDefault();const t=document.querySelector(h);if(t)t.scrollIntoView({behavior:'smooth',block:'center'})}));
 
-      const form = event.target;
-      const data = Object.fromEntries(new FormData(form).entries());
+    // ═══ WEBGPU SINGLE CANVAS ONLY ═══
+    async function init(){
+    const cnv=document.getElementById('c'),fb=document.getElementById('fb');
+    if(!navigator.gpu){fb.classList.add('visible');return}
+    const ad=await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
+    if(!ad){fb.classList.add('visible');return}
+    const dev=await ad.requestDevice();
+    const ctx=cnv.getContext('webgpu');
+    const fmt=navigator.gpu.getPreferredCanvasFormat();
+    ctx.configure({device:dev,format:fmt,alphaMode:'opaque'});
 
-      console.log("Waitlist signup:", data);
+    const sh=/*wgsl*/`
+struct U{ r:vec2f,t:f32, i:f32,m:vec2f,th:f32, p0:f32,p1:f32,p2:f32}
+@group(0)@binding(0)var<uniform>u:U;
+struct V{@builtin(position)p:vec4f,@location(0)uv:vec2f}
+@vertex fn vs(@builtin(vertex_index)i:u32)->V{var o:V;let P=array<vec2f,3>(vec2f(-1,-3),vec2f(3,1),vec2f(-1,1));o.p=vec4f(P[i],0,1);o.uv=P[i]*.5+.5;o.uv.y=1-o.uv.y;return o;}
 
-      const button = form.querySelector("button");
-      const original = button.textContent;
+fn h2(p:vec2f)->vec2f{let q=vec2f(dot(p,vec2f(127.1,311.7)),dot(p,vec2f(269.5,183.3)));return fract(sin(q)*43758.5453);}
+fn h21(p:vec2f)->f32{let v=h2(p);return fract((v.x+v.y)*43758.5);}
+fn h22(p:vec2f)->vec2f{return h2(p);}
+fn ns(p:vec2f)->f32{let i=floor(p);let f=fract(p);let u=f*f*(3-2*f);let a=vec2f(h21(i),h21(i+vec2f(1,0)));let c=vec2f(h21(i+vec2f(0,1)),h21(i+vec2f(1,1)));return mix(mix(a.x,a.y,u.x),mix(c.x,c.y,u.x),u.y);}
+const R=mat2x2f(1.62,1.18,-1.18,1.62);const O=vec2f(13.1,7.7);
+fn f5(p0:vec2f)->f32{var p=p0;var a=.5;var v=0.;for(var i=0;i<5;i++){v+=a*ns(p);p=R*p+O;a*=.52;}return v;}
+fn f4(p0:vec2f)->f32{var p=p0;var a=.5;var v=0.;for(var i=0;i<4;i++){v+=a*ns(p);p=R*p+O;a*=.52;}return v;}
+fn warp(p:vec2f,t:f32)->vec2f{
+var q=p;
+q+=(vec2f(f5(q*.60+vec2f(t*.020,-t*.012)),f5(q*.60+vec2f(5.2,1.3)-t*.015))-.5)*.50;
+q+=(vec2f(f5(q*.95+vec2f(-t*.035,t*.018)),f5(q*.95+vec2f(3.1,8.7)+t*.022))-.5)*.38;
+q+=(vec2f(f4(q*1.70+vec2f(t*.028,t*.011)),f4(q*1.70+vec2f(9.4,2.6)-t*.019))-.5)*.22;
+q+=(vec2f(f4(q*2.80+vec2f(-t*.016,-t*.024)),f4(q*2.80+vec2f(1.8,6.3)+t*.013))-.5)*.14;
+return q;
+}
+fn pal(v:f32)->vec3f{let x=clamp(v,0,1);let a=vec3f(0.470,0.330,0.780);let b=vec3f(0.230,0.170,0.320);let c=vec3f(0.950,1.050,0.760);let d=vec3f(0.020,0.000,0.040);return clamp(a+b*cos(3.14159*(c*x+d)),vec3f(0),vec3f(1));}
+fn rc(x:f32,t:f32,ph:f32)->f32{return.14*sin(x*1.9+t*.28+ph)+.08*sin(x*3.6-t*.18+ph*.7)+.05*sin(x*6.2+t*.12+ph*1.3);}
+struct Rib{ba:f32,bb:f32,co:f32,sc:f32,te:f32,ce:f32}
+fn rib(q:vec2f,t:f32,ph:f32,yo:f32)->Rib{let c=rc(q.x*2,t,ph)+yo;let dy=q.y-c;let d2=dy*dy;let so=.11*sin(q.x*2.4-t*.11+ph);let to=.09*sin(q.x*2.9+t*.09+ph);var r:Rib;r.ce=c;r.ba=exp(-d2/.090);r.bb=exp(-d2/.028);r.co=exp(-d2/.004);r.sc=exp(-((q.y-(c+so))*(q.y-(c+so)))/.060);r.te=exp(-((q.y-(c-to))*(q.y-(c-to)))/.075);return r;}
+struct Dst{fi:f32,he:f32}
+fn dust(q:vec2f,t:f32)->Dst{
+let pF=q*.75+vec2f(t*.020,-t*.010);let gF=pF*24;let cF=floor(gF);let fF=fract(gF);
+let pH=q*.40+vec2f(-t*.008,t*.005);let gH=pH*10;let cH=floor(gH);let fH=fract(gH);
+var fi=0.;var he=0.;
+for(var j=-1;j<=1;j++){for(var i=-1;i<=1;i++){let off=vec2f(f32(i),f32(j));
+{let id=cF+off;let rnd=h22(id);let ph=h21(id+19.31);let df=vec2f(sin(t*.238+ph*8),cos(t*.182+ph*6))*.08;fi+=exp(-dot(fF-off-rnd-df,fF-off-rnd-df)*180)*smoothstep(.82,1,ph);}
+{let id=cH+off;let rnd=h22(id+7.53);let ph=h21(id+31.17);let df=vec2f(sin(t*.077+ph*8),cos(t*.059+ph*6))*.08;he+=exp(-dot(fH-off-rnd-df,fH-off-rnd-df)*180)*smoothstep(.82,1,ph);}
+}}var o:Dst;o.fi=fi;o.he=he;return o;
+}
+fn sl(qy:f32,y:f32,th:f32)->f32{let d=qy-y;return exp(-(d*d)/max(1e-5,th));}
+fn sig(v:f32)->f32{let k=12.;let thr=.50;let s=1/(1+exp(-k*(v-thr)));let s0=1/(1+exp(k*thr));let s1=1/(1+exp(-k*(1-thr)));return clamp((s-s0)/(s1-s0),0,1);}
+fn hal2(idx:u32)->f32{var f=1.;var r=0.;var i=idx;for(var k=0u;k<8u;k++){f/=2;r+=f*f32(i&1u);i>>=1u;}return r;}
+fn hal3(idx:u32)->f32{var f=1.;var r=0.;var i=idx;for(var k=0u;k<8u;k++){f/=3;r+=f*f32(i%3u);i/=3u;}return r;}
 
-      button.textContent = "Received";
-      button.disabled = true;
+@fragment fn fs(in:V)->@location(0)vec4f{
+let asp=u.r.x/max(1,u.r.y);
+let fi=u32(u.t*60)%16u;
+let ji=vec2f(hal2(fi)-.5,hal3(fi)-.5)/u.r;
+let uv=in.uv+ji;
+var p=(uv-.5)*vec2f(asp,1);
+let t=u.t*.85;
+let br=.88+.12*sin(t*.04);
+let m=(u.m-.5)*vec2f(asp,-1);
+p+=(p-m)*exp(-length(p-m)*2)*.08;
+let q=warp(p,t);
+let xN=clamp(p.x/asp+.5,0,1);
+let r0=rib(q,t,0,0);let r1=rib(q,t,2.10,-.18);let r2=rib(q,t,-1.70,.22);
+let cld=f5(q*3+vec2f(t*.045,-t*.025));
+let vns=f5(q*9.5+vec2f(-t*.030,t*.020));
+let vSig=sig(vns);
+let ss=smoothstep(.20,.82,cld);
+let v0=ss*(r0.ba+r0.sc*.65+r0.te*.45);
+let v1=ss*.9*(r1.ba+r1.sc*.55+r1.te*.35)*.55;
+let v2=ss*.85*(r2.ba+r2.sc*.40+r2.te*.25)*.30;
+let f0=vSig*(r0.bb+r0.sc*.35);
+let f1=vSig*(r1.bb+r1.sc*.25)*.45;
+let f2=vSig*(r2.bb+r2.sc*.18)*.22;
+let p1=pal(.62+.18*sin(t*.035+q.x*.6));
+let p2=pal(.76+.12*sin(t*.028-q.y*.4));
+let p3=pal(.55+.15*sin(t*.031+q.y*.5+1.2));
+let l0a=sl(q.y,r0.ce,.0025);let l0b=sl(q.y,r0.ce+.025*sin(q.x*3+t*.35),.0035);
+let l0c=sl(q.y,r0.ce-.022*sin(q.x*2.4-t*.28),.0035);
+let l1a=sl(q.y,r1.ce,.0018);let l2a=sl(q.y,r2.ce,.0012);
+let g0=(l0a*.5+l0b*.35+l0c*.35)*(.6+.2*sin(t*.9+xN*6));
+let dust=dust(q,t);
+let vd=length((uv-.5)*vec2f(asp,1));
+let th=clamp(u.th,0,1);
+let dark=th<.5;
+var col:vec3f;
+if dark{
+let bg=vec3f(.043,.063,.125);
+col=bg;
+col=mix(col,p1,v0*.40);col=mix(col,p2,f0*.29);col=mix(col,p3,v1*.28);
+col=mix(col,p2,f1*.18);col=mix(col,p1,v2*.16);col=mix(col,p3,f2*.10);
+col+=p2*g0*.14;col+=p1*r0.co*.07;
+col+=p3*l1a*.3*(.5+.15*sin(t*.7+xN*4))*.08;
+col+=p1*r1.co*.025;col+=p3*l2a*.04;
+col+=p2*dust.fi*.14;col+=vec3f(.75,.82,1)*(dust.fi*dust.fi)*.20;
+col+=p1*dust.he*.09;col+=p3*pow(dust.he,1.5)*.06;col*=br;
+col=mix(vec3f(.022,.032,.065),col,.94+smoothstep(1.10,.08,vd)*.06);
+col*=smoothstep(1.20,.35,vd)*.18+.82;
+col=pow(max(col,vec3f(0)),vec3f(.92));
+col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.20);
+col=smoothstep(vec3f(.02),vec3f(.98),col);
+col+=vec3f((h21(uv*u.r+t)-.5)*.013);
+}else{
+let bg=vec3f(0.800,0.812,0.839);
+col=bg;
+let nt=vec3f(.376,.137,.867);
+col=mix(col,mix(p1,nt,.35),v0*.46);
+col=mix(col,mix(p2,nt,.45),f0*.34*br);
+col=mix(col,mix(p3,nt,.25),v1*.32);
+col=mix(col,mix(p2,nt,.45),f1*.22*br);
+col=mix(col,mix(p1,nt,.30),v2*.20);
+col=mix(col,mix(p3,nt,.20),f2*.14*br);
+col+=mix(p2,nt,.55)*g0*.18*br;col-=p1*r0.co*.04;
+col+=mix(p3,nt,.35)*l1a*.3*(.5+.15*sin(t*.7+xN*4))*.08;
+col-=p1*r1.co*.012;col+=p3*l2a*.025;
+col-=p2*dust.fi*.08;col-=vec3f(.80,.78,.84)*(dust.fi*dust.fi)*.12;
+col-=p1*dust.he*.05;col-=p3*pow(dust.he,1.5)*.03;
+col=mix(bg,col,.92+smoothstep(1.10,.08,vd)*.08);
+col*=smoothstep(1.20,.35,vd)*.06+.94;
+col=pow(max(col,vec3f(0)),vec3f(.96));
+col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.15);
+col=smoothstep(vec3f(.01),vec3f(.99),col);
+col+=vec3f((h21(uv*u.r+t)-.5)*.008);
+}
+return vec4f(clamp(col,vec3f(0),vec3f(1)),1);
+}`;
 
-      setTimeout(() => {
-        button.textContent = original;
-        button.disabled = false;
-        form.reset();
-      }, 1800);
+    const mod=dev.createShaderModule({code:sh});
+    const ub=dev.createBuffer({size:64,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
+    const bgl=dev.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:'uniform'}}]});
+    const pipe=dev.createRenderPipeline({layout:dev.createPipelineLayout({bindGroupLayouts:[bgl]}),vertex:{module:mod,entryPoint:'vs'},fragment:{module:mod,entryPoint:'fs',targets:[{format:fmt}]},primitive:{topology:'triangle-list'}});
+    const bg=dev.createBindGroup({layout:bgl,entries:[{binding:0,resource:{buffer:ub}}]});
+
+    const rto=Math.random()*1000;
+    let tmx=.2+Math.random()*.6,tmy=.2+Math.random()*.6,mx=tmx,my=tmy;
+    window.addEventListener('pointermove',e=>{tmx=e.clientX/window.innerWidth;tmy=e.clientY/window.innerHeight;});
+
+    let rsT=0;
+    function rs(){
+        const w=Math.max(1,Math.floor(cnv.clientWidth));
+        const h=Math.max(1,Math.floor(cnv.clientHeight));
+        if(cnv.width!==w||cnv.height!==h){cnv.width=w;cnv.height=h;}
     }
+    window.addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(rs,150);});
+    rs();
 
-    document.getElementById("topForm").addEventListener("submit", handleSubmit);
-    document.getElementById("bottomForm").addEventListener("submit", handleSubmit);
-  </script>
+    const st=performance.now();
+    const d=new Float32Array(16);
+
+    function ff(){
+        rs();
+        const time=(performance.now()-st)/1000+rto;
+        mx+=(tmx-mx)*.06;my+=(tmy-my)*.06;
+        d[0]=cnv.width;d[1]=cnv.height;d[2]=time;d[3]=1;
+        d[4]=mx;d[5]=my;
+        d[6]=html.getAttribute('data-theme')==='light'?1:0;
+        dev.queue.writeBuffer(ub,0,d.buffer);
+        const enc=dev.createCommandEncoder();
+        const isL=html.getAttribute('data-theme')==='light';
+        const pass=enc.beginRenderPass({colorAttachments:[{view:ctx.getCurrentTexture().createView(),clearValue:isL?{r:.800,g:.812,b:.839,a:1}:{r:.043,g:.063,b:.125,a:1},loadOp:'clear',storeOp:'store'}]});
+        pass.setPipeline(pipe);pass.setBindGroup(0,bg);pass.draw(3);pass.end();
+        dev.queue.submit([enc.finish()]);
+        requestAnimationFrame(ff);
+    }
+    requestAnimationFrame(ff);
+    }
+    init().catch(e=>{console.error(e);document.getElementById('fb')?.classList.add('visible')});
+    </script>
 </body>
 </html>
