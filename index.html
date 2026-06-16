@@ -372,12 +372,15 @@
     // ═══ WEBGPU SINGLE CANVAS ONLY ═══
     async function init(){
     const cnv=document.getElementById('c'),fb=document.getElementById('fb');
-    if(!navigator.gpu){fb.classList.add('visible');return}
-    const ad=await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
+
+    const gpu = navigator.gpu || navigator.webkitGPU;
+    if(!gpu){fb.classList.add('visible');return}
+
+    const ad=await gpu.requestAdapter({powerPreference:'high-performance'});
     if(!ad){fb.classList.add('visible');return}
     const dev=await ad.requestDevice();
     const ctx=cnv.getContext('webgpu');
-    const fmt=navigator.gpu.getPreferredCanvasFormat();
+    const fmt=gpu.getPreferredCanvasFormat();
     ctx.configure({device:dev,format:fmt,alphaMode:'opaque'});
 
     const sh=/*wgsl*/`
