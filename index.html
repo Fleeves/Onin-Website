@@ -260,22 +260,9 @@
         .audience-list li{font-size:1rem;font-weight:450;font-stretch:90%;letter-spacing:.04em;color:var(--text-variant);padding:.55rem 0;opacity:.85;transition:color .2s ease,opacity .2s ease,transform .2s ease}
         .audience-list li:hover{color:var(--accent);opacity:1;transform:translateX(2px)}
 
-        .cta-section{
-            position:relative;min-height:100vh;display:flex;align-items:center;
-            overflow:hidden;
-            background:
-                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(96,35,221,.06) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(96,35,221,.04) 0%, transparent 60%),
-                var(--bg);
-        }
-        .cta-gradient{
-            position:absolute;top:0;left:0;right:0;height:28vh;z-index:1;
-            pointer-events:none;
-            background:linear-gradient(to bottom,var(--bg) 0%,rgba(8,8,16,.75) 30%,rgba(8,8,16,.25) 65%,transparent 100%);
-        }
-        [data-theme="light"] .cta-gradient{
-            background:linear-gradient(to bottom,var(--bg) 0%,rgba(204,207,214,.80) 30%,rgba(204,207,214,.25) 65%,transparent 100%);
-        }
+        .cta-section{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(96,35,221,.06) 0%, transparent 70%),radial-gradient(ellipse 60% 40% at 80% 60%, rgba(96,35,221,.04) 0%, transparent 60%),var(--bg);}
+        .cta-gradient{position:absolute;top:0;left:0;right:0;height:28vh;z-index:1;pointer-events:none;background:linear-gradient(to bottom,var(--bg) 0%,rgba(8,8,16,.75) 30%,rgba(8,8,16,.25) 65%,transparent 100%);}
+        [data-theme="light"] .cta-gradient{background:linear-gradient(to bottom,var(--bg) 0%,rgba(204,207,214,.80) 30%,rgba(204,207,214,.25) 65%,transparent 100%);}
         .cta-content{position:relative;z-index:2}
         .site-footer{padding:2.5rem 0;border-top:1px solid var(--border-subtle)}
         .footer-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
@@ -287,17 +274,7 @@
         strong{font-weight:550;font-stretch:85%;color:var(--text)}
         ::selection{background:rgba(96,35,221,.25);color:var(--text)}
 
-        @media(max-width:640px){
-            .waitlist-form{
-                flex-direction:column;
-                max-width:100%;
-            }
-            .waitlist-form .btn,
-            .waitlist-input{
-                width:100%;
-                max-width:100%;
-            }
-        }
+        @media(max-width:640px){.waitlist-form{flex-direction:column;max-width:100%;}.waitlist-form .btn,.waitlist-input{width:100%;max-width:100%;}}
     </style>
 </head>
 <body>
