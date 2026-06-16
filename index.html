@@ -201,6 +201,12 @@
         .teaser-copy{font-size:clamp(2rem,3.8vw,4rem);line-height:1.45;letter-spacing:1pt;width:auto;max-width:none;text-align:center}
         .video-stage{width:100%;height:min(78vh,900px);border-radius:1.5rem;border:1px solid var(--border-subtle);background:var(--tile-bg);display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',monospace;letter-spacing:.08em}
         .hero-headline{font-size:clamp(2.75rem,5.5vw,4.75rem);font-weight:500;font-stretch:80%;letter-spacing:1pt;line-height:1.08;margin-bottom:1.5rem}
+        @media(max-width:640px){
+            .hero-headline{
+                font-size:clamp(2.2rem,9vw,2.9rem);
+                line-height:1.05;
+            }
+        }
         .hero-headline em{font-style:italic;font-weight:400;color:var(--text-variant)}
         .hero-sub{font-size:1.2rem;font-weight:400;font-stretch:95%;letter-spacing:1pt;line-height:1.55;color:var(--text-variant);margin-bottom:2.5rem;max-width:36rem}
         .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
