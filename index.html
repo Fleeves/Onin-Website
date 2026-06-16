@@ -208,7 +208,22 @@
             }
         }
         .hero-headline em{font-style:italic;font-weight:400;color:var(--text-variant)}
-        .hero-sub{font-size:1.2rem;font-weight:400;font-stretch:95%;letter-spacing:1pt;line-height:1.55;color:var(--text-variant);margin-bottom:2.5rem;max-width:36rem}
+        .hero-sub{
+            font-size:1.08rem;
+            font-weight:400;
+            font-stretch:95%;
+            letter-spacing:.6pt;
+            line-height:1.5;
+            color:var(--text-variant);
+            margin:0 auto 2.5rem;
+            max-width:32rem;
+        }
+        @media(max-width:640px){
+            .hero-sub{
+                font-size:1rem;
+                max-width:26rem;
+            }
+        }
         .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
         .section-body{font-size:1.05rem;font-weight:400;font-stretch:92%;letter-spacing:.045em;line-height:1.65;color:var(--text-variant);max-width:34rem}
         .section-body+.section-body{margin-top:.9rem}
