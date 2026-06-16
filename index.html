@@ -290,7 +290,24 @@
         [data-theme="light"] .cta-gradient{background:linear-gradient(to bottom,var(--bg) 0%,rgba(204,207,214,.80) 30%,rgba(204,207,214,.25) 65%,transparent 100%);}
         .cta-content{position:relative;z-index:2}
         .site-footer{padding:2.5rem 0;border-top:1px solid var(--border-subtle)}
-        .footer-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+        .footer-logo-wrap{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin-bottom:.5rem;
+        }
+
+        .footer-logo{
+            width:56px;
+            height:56px;
+            object-fit:contain;
+            display:block;
+        }
+        html[data-theme="dark"] .footer-logo-dark{display:block}
+        html[data-theme="dark"] .footer-logo-light{display:none}
+        html[data-theme="light"] .footer-logo-dark{display:none}
+        html[data-theme="light"] .footer-logo-light{display:block}
+        .footer-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:center;align-items:center;text-align:center;}
         @media(max-width:640px){.footer-inner{padding:0 1.25rem;flex-direction:column;align-items:flex-start}}
         .footer-text{font-family:'Courier New',Courier,monospace;font-size:.75rem;letter-spacing:.06em;color:var(--text-variant);opacity:.6}
         .footer-links{display:flex;gap:1.5rem}
@@ -390,7 +407,16 @@
     </section>
     <hr class="rule">
 
-    <footer class="site-footer"><div class="footer-inner"><span class="footer-text">&copy; 2026 Orin &mdash; Built for people who think in projects, not files.</span><div class="footer-links"><a href="#">Twitter / X</a><a href="#">Email</a><a href="#">Privacy</a></div></div></footer>
+    <footer class="site-footer">
+        <div class="footer-logo-wrap">
+            <img class="footer-logo footer-logo-dark" src="Onin_Logo_LightOnDark.png" alt="Orin logo">
+            <img class="footer-logo footer-logo-light" src="Onin_Logo_DarkOnLight.png" alt="Orin logo">
+        </div>
+        <div class="footer-inner">
+            <span class="footer-text">&copy; 2026 Orin &mdash; Built for people who think in projects, not files.</span>
+            <div class="footer-links"><a href="#">Twitter / X</a><a href="#">Email</a><a href="#">Privacy</a></div>
+        </div>
+    </footer>
 
     <script>
     const html=document.documentElement,tt=document.getElementById('themeToggle');
