@@ -23,7 +23,16 @@ export default async function handler(req, res) {
         })
       });
   
-      const data = await response.json();
+      const raw = await response.text();
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = { raw };
+      }
+
+      console.log('BREVO STATUS:', response.status);
+      console.log('BREVO RESPONSE:', data);
   
       if (!response.ok) {
         return res.status(response.status).json(data);
@@ -32,8 +41,10 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
   
     } catch (err) {
+      console.error('WAITLIST ERROR:', err);
       return res.status(500).json({
-        error: err.message
+        error: err.message,
+        stack: String(err)
       });
     }
   }
