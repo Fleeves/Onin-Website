@@ -199,6 +199,17 @@
         .fullscreen-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
         .fullscreen-section .section-inner{max-width:none;width:100%;display:flex;justify-content:center;align-items:center;text-align:center;padding:0 4vw}
         .teaser-copy{font-size:clamp(2rem,3.8vw,4rem);line-height:1.45;letter-spacing:1pt;width:auto;max-width:none;text-align:center}
+        @media(max-width:640px){
+            .teaser-copy{
+                font-size:clamp(1rem,4.5vw,2rem);
+                line-height:1.9;
+            }
+
+            .teaser-copy br{
+                display:block;
+                content:'';
+            }
+        }
         .video-stage{width:100%;height:min(78vh,900px);border-radius:1.5rem;border:1px solid var(--border-subtle);background:var(--tile-bg);display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',monospace;letter-spacing:.08em}
         .hero-headline{font-size:clamp(2.75rem,5.5vw,4.75rem);font-weight:500;font-stretch:80%;letter-spacing:1pt;line-height:1.08;margin-bottom:1.5rem}
         @media(max-width:640px){
