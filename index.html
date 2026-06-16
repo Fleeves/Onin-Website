@@ -526,8 +526,7 @@ col*=smoothstep(1.20,.35,vd)*.04+.96;
 col=pow(max(col,vec3f(0)),vec3f(.96));
 col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.10);
 col=smoothstep(vec3f(.01),vec3f(.99),col);
-// Grain disabled in light theme to avoid visible texture/grid artifacts
-col+=vec3f(0.0);
+col+=vec3f((h21(uv*u.r+t)-.5)*.006);
 }
 
 return vec4f(clamp(col,vec3f(0),vec3f(1)),1);
