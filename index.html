@@ -451,7 +451,8 @@ fn hal3(idx:u32)->f32{var f=1.;var r=0.;var i=idx;for(var k=0u;k<8u;k++){f/=3;r+
 @fragment fn fs(in:V)->@location(0)vec4f{
 let asp=u.r.x/max(1,u.r.y);
 let fi=u32(u.t*60)%16u;
-let ji=vec2f(hal2(fi)-.5,hal3(fi)-.5)/u.r;
+let jitter=vec2f(hal2(fi)-.5,hal3(fi)-.5)/u.r;
+let ji=select(jitter, vec2f(0.0,0.0), u.th > 0.5);
 let uv=in.uv+ji;
 var p=(uv-.5)*vec2f(asp,1);
 let t=u.t*.85;
