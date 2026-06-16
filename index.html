@@ -286,20 +286,19 @@
         .audience-list li:hover{color:var(--accent);opacity:1;transform:translateX(2px)}
 
         .cta-section{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(96,35,221,.06) 0%, transparent 70%),radial-gradient(ellipse 60% 40% at 80% 60%, rgba(96,35,221,.04) 0%, transparent 60%),var(--bg);}
-        .cta-gradient{position:absolute;top:0;left:0;right:0;height:28vh;z-index:1;pointer-events:none;background:linear-gradient(to bottom,var(--bg) 0%,rgba(8,8,16,.75) 30%,rgba(8,8,16,.25) 65%,transparent 100%);}
-        [data-theme="light"] .cta-gradient{background:linear-gradient(to bottom,var(--bg) 0%,rgba(204,207,214,.80) 30%,rgba(204,207,214,.25) 65%,transparent 100%);}
+        .cta-gradient{display:none;}
         .cta-content{position:relative;z-index:2}
-        .site-footer{padding:2.5rem 0;border-top:1px solid var(--border-subtle)}
+        .site-footer{padding:1rem 0 1.25rem;border-top:1px solid var(--border-subtle)}
         .footer-logo-wrap{
             display:flex;
             justify-content:center;
             align-items:center;
-            margin-bottom:.5rem;
+            margin-bottom:.2rem;
         }
 
         .footer-logo{
-            width:56px;
-            height:56px;
+            width:40px;
+            height:40px;
             object-fit:contain;
             display:block;
         }
@@ -309,7 +308,7 @@
         html[data-theme="light"] .footer-logo-light{display:block}
         .footer-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:center;align-items:center;text-align:center;}
         @media(max-width:640px){.footer-inner{padding:0 1.25rem;flex-direction:column;align-items:flex-start}}
-        .footer-text{font-family:'Courier New',Courier,monospace;font-size:.75rem;letter-spacing:.06em;color:var(--text-variant);opacity:.6}
+        .footer-text{font-family:'Courier New',Courier,monospace;font-size:.72rem;letter-spacing:.06em;line-height:1.2;color:var(--text-variant);opacity:.6}
         .footer-links{display:flex;gap:1.5rem}
         .footer-links a{font-family:'Courier New',Courier,monospace;font-size:.75rem;letter-spacing:.06em;color:var(--text-variant);text-decoration:none;opacity:.6}
         .footer-links a:hover{opacity:1;color:var(--accent)}
@@ -414,7 +413,6 @@
         </div>
         <div class="footer-inner">
             <span class="footer-text">&copy; 2026 Orin &mdash; Built for people who think in projects, not files.</span>
-            <div class="footer-links"><a href="#">Twitter / X</a><a href="#">Email</a><a href="#">Privacy</a></div>
         </div>
     </footer>
 
