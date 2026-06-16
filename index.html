@@ -56,6 +56,9 @@
             color:var(--text);background:var(--bg);min-height:100vh;
             position:relative;
             overflow-x:hidden;
+            cursor:default;
+            -webkit-user-select:none;
+            user-select:none;
         }
 
         body,
@@ -259,7 +262,12 @@
         .thread-list li::before{content:'';position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.55}
         .cmd{font-family:'Courier New',Courier,monospace;font-size:.85em;letter-spacing:.05em;color:var(--accent);background:rgba(96,35,221,.08);padding:.15em .4em;border-radius:4px}
         .waitlist-form{display:flex;gap:.75rem;max-width:30rem;flex-wrap:wrap}
-        .waitlist-input{flex:1;min-width:14rem;font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:450;font-stretch:90%;letter-spacing:.04em;font-size:.9rem;padding:.85rem 1.5rem;border-radius:100px;border:none;background:var(--input-bg);color:var(--text);outline:none}
+        .waitlist-input{
+            flex:1;min-width:14rem;font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:450;font-stretch:90%;letter-spacing:.04em;font-size:.9rem;padding:.85rem 1.5rem;border-radius:100px;border:none;background:var(--input-bg);color:var(--text);outline:none;
+            cursor:text;
+            -webkit-user-select:text;
+            user-select:text;
+        }
         .waitlist-input::placeholder{color:var(--text-variant);opacity:.5}
         .waitlist-input:focus{box-shadow:0 0 0 3px rgba(96,35,221,.1)}
         .audience-list{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem 1rem;list-style:none;padding:0;margin-top:.5rem}
