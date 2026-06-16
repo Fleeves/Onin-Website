@@ -516,7 +516,7 @@ col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.20);
 col=smoothstep(vec3f(.02),vec3f(.98),col);
 col+=vec3f((h21(uv*u.r+t)-.5)*.013);
 }else{
-let bg=vec3f(0.905,0.915,0.945);
+let bg=vec3f(0.800,0.812,0.839);
 col=bg;
 let nt=vec3f(.600,.380,.985);
 col=mix(col,mix(p1,nt,.35),v0*.46);
@@ -530,7 +530,7 @@ col+=mix(p3,nt,.35)*l1a*.3*(.5+.15*sin(t*.7+xN*4))*.08;
 col-=p1*r1.co*.012;col+=p3*l2a*.025;
 col-=p2*dust.fi*.08;col-=vec3f(.80,.78,.84)*(dust.fi*dust.fi)*.12;
 col-=p1*dust.he*.05;col-=p3*pow(dust.he,1.5)*.03;
-col=mix(bg,col,.84+smoothstep(1.10,.08,vd)*.05);
+col=mix(bg,col,.78+smoothstep(1.10,.08,vd)*.04);
 col*=smoothstep(1.20,.35,vd)*.06+.94;
 col=pow(max(col,vec3f(0)),vec3f(.96));
 col=mix(vec3f(dot(col,vec3f(.299,.587,.114))),col,1.15);
