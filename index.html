@@ -346,6 +346,11 @@
         .shot-frame{border-radius:1rem;border:1px solid var(--border-strong);background:var(--tile-bg);overflow:hidden;box-shadow:0 30px 90px rgba(8,8,16,.5)}
         [data-theme="light"] .shot-frame{box-shadow:0 30px 90px rgba(8,8,16,.14)}
         .shot-frame img{display:block;width:100%;height:auto}
+        .overlay-shot{width:100%;height:auto}
+        html[data-theme="dark"] .overlay-shot-dark{display:block}
+        html[data-theme="dark"] .overlay-shot-light{display:none}
+        html[data-theme="light"] .overlay-shot-dark{display:none}
+        html[data-theme="light"] .overlay-shot-light{display:block}
         .shot-empty{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',Courier,monospace;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;opacity:.45}
         .shot-cap{font-family:'Courier New',Courier,monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-variant);opacity:.55;margin-top:1.1rem;text-align:center}
 
@@ -419,9 +424,17 @@
         <div class="section-inner shot-inner">
             <p class="system shot-label">This is the whole thing. One keystroke away.</p>
             <div class="shot-frame">
-                <img src="Onin_Overlay.png" alt="The Onin overlay: switch projects, search by content, and launch apps from one shortcut"
-                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div class="shot-empty" style="display:none">Overlay screenshot &middot; Onin_Overlay.png</div>
+                <img class="overlay-shot overlay-shot-dark"
+                     src="Onin_Overlay_Dark.png"
+                     alt="The Onin overlay: switch projects, search by content, and launch apps from one shortcut"
+                     onerror="this.style.display='none'">
+
+                <img class="overlay-shot overlay-shot-light"
+                     src="Onin_Overlay_Light.png"
+                     alt="The Onin overlay: switch projects, search by content, and launch apps from one shortcut"
+                     onerror="this.style.display='none'">
+
+                <div class="shot-empty" style="display:none">Overlay screenshot</div>
             </div>
             <p class="shot-cap">Press <span class="cmd">Alt-X</span> anywhere &middot; your projects, search and apps in one place</p>
         </div>
