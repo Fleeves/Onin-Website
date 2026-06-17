@@ -231,7 +231,20 @@
                 content:'';
             }
         }
-        .video-stage{width:100%;height:min(78vh,900px);border-radius:1.5rem;border:1px solid var(--border-subtle);background:var(--tile-bg);display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',monospace;letter-spacing:.08em}
+        .video-stage{
+            width:min(96vw,1500px);
+            aspect-ratio:3024/1964;
+            border-radius:1.5rem;
+            border:1px solid var(--border-subtle);
+            background:var(--tile-bg);
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--text-variant);
+            font-family:'Courier New',monospace;
+            letter-spacing:.08em;
+        }
         .hero-headline{font-size:clamp(2.75rem,5.5vw,4.75rem);font-weight:500;font-stretch:80%;letter-spacing:1pt;line-height:1.08;margin-bottom:1.5rem}
         @media(max-width:640px){
             .hero-headline{
@@ -395,21 +408,26 @@
 
     <!-- PROOF FIRST — the demo sits directly under the hero -->
     <section id="demo-video" class="fullscreen-section">
-        <div class="section-inner" style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+        <div class="section-inner" style="width:100%;max-width:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 2vw;">
         <p class="system"
            style="font-size:.78rem;letter-spacing:.12em;opacity:.55;text-transform:uppercase;margin-bottom:2rem;width:100%;text-align:center;">
-            Forty seconds. Watch an entire project come back.
+            Sixty seconds. Watch two entire projects come back. And switch.
         </p>
-        <div class="video-stage" role="img" aria-label="Onin demo video — coming soon">
-            <!-- When the video is ready, replace the placeholder span below with:
-                 <video autoplay muted loop playsinline preload="metadata" poster="Onin_Demo_Poster.jpg"
-                        style="width:100%;height:100%;object-fit:cover;border-radius:inherit">
-                   <source src="Onin_Demo.mp4" type="video/mp4">
-                 </video> -->
-            <span style="display:flex;flex-direction:column;align-items:center;gap:.9rem;">
-                <span style="font-size:1.6rem;opacity:.5">▶</span>
-                <span style="font-size:.72rem;letter-spacing:.14em;opacity:.45;text-transform:uppercase">Demo · 0:42</span>
-            </span>
+        <div class="video-stage">
+            <video
+                autoplay
+                muted
+                playsinline
+                controls
+                preload="metadata"
+                style="
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                    display:block;
+                ">
+                <source src="demo_Onin.mp4" type="video/mp4">
+            </video>
         </div>
         <div class="demo-cta">
             <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">
