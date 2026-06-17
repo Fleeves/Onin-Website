@@ -211,6 +211,8 @@
     width:auto;
 }
         .fullscreen-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+
+        @media(max-width:640px){.fullscreen-section{min-height:auto;align-items:flex-start;padding:4rem 0 2rem;}}
         .fullscreen-section .section-inner{max-width:none;width:100%;display:flex;justify-content:center;align-items:center;text-align:center;padding:0 4vw}
         .teaser-copy{
             font-size:clamp(1.35rem,2.2vw,2.2rem);
