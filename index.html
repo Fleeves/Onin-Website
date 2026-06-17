@@ -358,6 +358,7 @@
         /* ── real product screenshot ── */
         .shot-inner{margin:0 auto;width:min(1080px,92vw);max-width:100%}
         .shot-label{font-family:'Courier New',Courier,monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.55;text-align:center;margin-bottom:1.75rem}
+        @media(max-width:640px){.shot-label{max-width:12rem;margin-left:auto; margin-right:auto;line-height:1.8;}}
         .shot-frame{border-radius:1rem;border:1px solid var(--border-strong);background:var(--tile-bg);overflow:hidden;box-shadow:0 30px 90px rgba(8,8,16,.5)}
         [data-theme="light"] .shot-frame{box-shadow:0 30px 90px rgba(8,8,16,.14)}
         .shot-frame img{display:block;width:100%;height:auto}
@@ -442,7 +443,10 @@
     <!-- SEE IT — the real interface, not a marketing render -->
     <section class="section" id="see-it">
         <div class="section-inner shot-inner">
-            <p class="system shot-label">This is the whole thing. One keystroke away.</p>
+            <p class="system shot-label">
+                This is the whole thing.<br>
+                One keystroke away.
+            </p>
             <div class="shot-frame">
                 <img class="overlay-shot overlay-shot-dark"
                      src="Onin_Overlay_Dark.png"
