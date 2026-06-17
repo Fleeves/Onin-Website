@@ -339,6 +339,9 @@
         .hero-trust{margin-top:1.4rem;font-family:'Courier New',Courier,monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-variant);opacity:.55}
         .hero-trust .dot{color:var(--accent);opacity:.7;margin:0 .55em}
 
+        .mobile-break{display:none;}
+        @media(max-width:640px){.mobile-break{display:inline;}}
+
         /* ── concrete-benefit cards (reuse .tile language) ── */
         .benefit-stack{display:flex;flex-direction:column;gap:1rem}
         .benefit{background:var(--tile-bg);border:1px solid var(--border-subtle);border-radius:1rem;padding:1.75rem 2rem;transition:border-color .25s ease,transform .25s ease}
@@ -444,7 +447,7 @@
     <section class="section" id="see-it">
         <div class="section-inner shot-inner">
             <p class="system shot-label">
-                This is the whole thing.<br>
+                This is the whole thing.<span class="mobile-break"><br></span>
                 One keystroke away.
             </p>
             <div class="shot-frame">
