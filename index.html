@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onin — The files are still there. The context is gone.</title>
-    <meta name="description" content="Onin remembers where you left off. Your computer remembers your files. It's time it remembered your work.">
+    <title>Onin — Pick up where you left off</title>
+    <meta name="description" content="Your computer remembers your files. Onin remembers your work. Close everything without fear, switch projects in seconds, and pick up exactly where you left off. For Windows.">
+    <meta property="og:title" content="Onin — Your computer remembers files. Onin remembers work.">
+    <meta property="og:description" content="Close everything without fear. Pick up exactly where you left off — every window, every tab, right down to your place on the page.">
+    <meta name="theme-color" content="#080810">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
@@ -316,6 +319,44 @@
         ::selection{background:rgba(96,35,221,.25);color:var(--text)}
 
         @media(max-width:640px){.waitlist-form{flex-direction:column;max-width:100%;}.waitlist-form .btn,.waitlist-input{width:100%;max-width:100%;}}
+
+        /* ── reassurance line under hero actions ── */
+        .hero-trust{margin-top:1.4rem;font-family:'Courier New',Courier,monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-variant);opacity:.55}
+        .hero-trust .dot{color:var(--accent);opacity:.7;margin:0 .55em}
+
+        /* ── concrete-benefit cards (reuse .tile language) ── */
+        .benefit-stack{display:flex;flex-direction:column;gap:1rem}
+        .benefit{background:var(--tile-bg);border:1px solid var(--border-subtle);border-radius:1rem;padding:1.75rem 2rem;transition:border-color .25s ease,transform .25s ease}
+        .benefit:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+        .benefit .b-key{font-family:'Courier New',Courier,monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.9;display:block;margin-bottom:.6rem}
+        .benefit .b-title{font-size:1.18rem;font-weight:500;font-stretch:85%;letter-spacing:.02em;color:var(--text);line-height:1.25;margin-bottom:.4rem}
+        .benefit .b-desc{font-size:.98rem;font-weight:400;font-stretch:92%;letter-spacing:.04em;line-height:1.6;color:var(--text-variant)}
+        @media(max-width:640px){.benefit{padding:1.5rem 1.5rem}}
+
+        /* ── trust note ── */
+        .trust-note{font-family:'Courier New',Courier,monospace;font-size:.78rem;letter-spacing:.08em;color:var(--text-variant);opacity:.6;margin-top:1.25rem;line-height:1.9}
+        .trust-note .ok{color:var(--accent);opacity:.85;margin-right:.5em}
+
+        /* ── reminder CTA under the demo ── */
+        .demo-cta{display:flex;justify-content:center;margin-top:2.5rem}
+
+        /* ── real product screenshot ── */
+        .shot-inner{margin:0 auto;width:min(1080px,92vw);max-width:100%}
+        .shot-label{font-family:'Courier New',Courier,monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.55;text-align:center;margin-bottom:1.75rem}
+        .shot-frame{border-radius:1rem;border:1px solid var(--border-strong);background:var(--tile-bg);overflow:hidden;box-shadow:0 30px 90px rgba(8,8,16,.5)}
+        [data-theme="light"] .shot-frame{box-shadow:0 30px 90px rgba(8,8,16,.14)}
+        .shot-frame img{display:block;width:100%;height:auto}
+        .shot-empty{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;color:var(--text-variant);font-family:'Courier New',Courier,monospace;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;opacity:.45}
+        .shot-cap{font-family:'Courier New',Courier,monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-variant);opacity:.55;margin-top:1.1rem;text-align:center}
+
+        /* ── inline error under the waitlist form ── */
+        .form-error{display:none;font-family:'Courier New',Courier,monospace;font-size:.8rem;color:#e06a6a;margin-top:1rem;letter-spacing:.04em}
+
+        /* ── respect reduced-motion preferences ── */
+        @media (prefers-reduced-motion: reduce){
+            html{scroll-behavior:auto}
+            *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+        }
     </style>
 </head>
 <body>
@@ -335,33 +376,59 @@
         <div class="hero-bg"><canvas id="c" aria-hidden="true"></canvas><div id="fb" class="webgpu-fallback">WEBGPU UNAVAILABLE</div></div>
         <div class="hero-transition"></div>
         <div class="section-inner hero-content">
-            <h1 class="hero-headline">The files are <em>still there.</em><br>The context is <em>gone.</em></h1>
-            <p class="hero-sub">Onin remembers where you left off.</p>
+            <h1 class="hero-headline">The files are <em>still there.</em><br>The work is <em>gone.</em></h1>
+            <p class="hero-sub">Onin remembers where you left off — every window, every tab, right down to your place on the page.</p>
             <div class="hero-actions">
-              <a href="#demo-video" class="btn btn-ghost">Watch Demo</a>
+              <a href="#demo-video" class="btn btn-ghost">Watch the demo</a>
               <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">
-                  Join the Waitlist
+                  Join the waitlist
               </button>
             </div>
+            <p class="hero-trust">For Windows <span class="dot">·</span> Private by design <span class="dot">·</span> Nothing leaves your machine</p>
         </div>
     </section>
 
-    <section class="fullscreen-section teaser-section"><div class="section-inner"><h2 class="teaser-copy">You're losing time reconstructing...<br>something your computer <span style="color:#6023DD;">never</span> saved.</h2></div></section>
+    <!-- PROOF FIRST — the demo sits directly under the hero -->
     <section id="demo-video" class="fullscreen-section">
         <div class="section-inner" style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
         <p class="system"
            style="font-size:.78rem;letter-spacing:.12em;opacity:.55;text-transform:uppercase;margin-bottom:2rem;width:100%;text-align:center;">
-            See Onin restore an entire project in seconds.
+            Forty seconds. Watch an entire project come back.
         </p>
-        <div class="video-stage">
-            DEMO_VIDEO_PLACEHOLDER
+        <div class="video-stage" role="img" aria-label="Onin demo video — coming soon">
+            <!-- When the video is ready, replace the placeholder span below with:
+                 <video autoplay muted loop playsinline preload="metadata" poster="Onin_Demo_Poster.jpg"
+                        style="width:100%;height:100%;object-fit:cover;border-radius:inherit">
+                   <source src="Onin_Demo.mp4" type="video/mp4">
+                 </video> -->
+            <span style="display:flex;flex-direction:column;align-items:center;gap:.9rem;">
+                <span style="font-size:1.6rem;opacity:.5">▶</span>
+                <span style="font-size:.72rem;letter-spacing:.14em;opacity:.45;text-transform:uppercase">Demo · 0:42</span>
+            </span>
+        </div>
+        <div class="demo-cta">
+            <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">
+                Join the waitlist
+            </button>
         </div>
     </div></section>
     <hr class="rule">
 
-    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">The data survived.<br>The thread didn't.</h2></div><div><p class="section-body">You open your computer.</p><p class="section-body">The files are there.</p><p class="section-body">The tabs are there.</p><p class="section-body">The documents are there.</p><p class="section-body">The code is there.</p><p class="section-body">Everything seems intact.</p><p class="section-body">And yet you can't continue.</p><p class="section-body">Because you're not looking for a file.</p><p class="section-body">You're trying to remember:</p><ul class="thread-list"><li>What was I doing?</li><li>Why did I make this decision?</li><li>Which of these tabs mattered?</li><li>What was the next step?</li></ul><p class="section-body" style="margin-top:1.5rem">The data survived.</p><p class="section-body"><strong>The thread didn't.</strong></p></div></div></div></section>
+    <!-- SEE IT — the real interface, not a marketing render -->
+    <section class="section" id="see-it">
+        <div class="section-inner shot-inner">
+            <p class="system shot-label">This is the whole thing. One keystroke away.</p>
+            <div class="shot-frame">
+                <img src="Onin_Overlay.png" alt="The Onin overlay: switch projects, search by content, and launch apps from one shortcut"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="shot-empty" style="display:none">Overlay screenshot &middot; Onin_Overlay.png</div>
+            </div>
+            <p class="shot-cap">Press <span class="cmd">Alt-X</span> anywhere &middot; your projects, search and apps in one place</p>
+        </div>
+    </section>
+    <hr class="rule">
 
-    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Every interruption has a cost.</h2></div><div><p class="section-body">A message.</p><p class="section-body">A meeting.</p><p class="section-body">A phone call.</p><p class="section-body">Another project.</p><p class="section-body">A weekend.</p><p class="section-body" style="margin-top:.9rem">You come back.</p><p class="section-body">And before you can do meaningful work, you have to rebuild the state of your thinking.</p><p class="section-body">Not because anything was lost.</p><p class="section-body"><strong>Because your computer never saved it.</strong></p></div></div></div></section>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Nothing was lost.<br>Everything was scattered.</h2></div><div><p class="section-body">Friday evening. You close your laptop.</p><p class="section-body">Monday morning, the files are still on the disk.</p><p class="section-body" style="margin-top:.9rem">But the place you were working from is gone:</p><ul class="thread-list"><li>The windows, arranged the way you had them.</li><li>The tabs that actually mattered.</li><li>The document, open to the right page.</li><li>The line you'd stopped on.</li></ul><p class="section-body" style="margin-top:1.5rem">Nothing was deleted. It was just scattered across your machine.</p><p class="section-body">So most days you don't close anything at all &mdash; forty windows, open for weeks, because rebuilding it all is worse.</p><p class="section-body"><strong>That &mdash; where you actually were &mdash; is the one thing your computer never saved.</strong></p></div></div></div></section>
 
     <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Computers remember information.<br>People need continuity.</h2></div><div><p class="section-body">Computers were built around:</p><p class="section-body"><span class="cmd">Files.</span> <span class="cmd">Folders.</span> <span class="cmd">Applications.</span> <span class="cmd">Windows.</span> <span class="cmd">Storage.</span></p><p class="section-body" style="margin-top:.9rem">People think in:</p><p class="section-body">Projects. Questions. Decisions. Progress. Intent. Momentum.</p><p class="section-body" style="margin-top:.9rem">Your computer remembers where everything is.</p><p class="section-body"><strong>It doesn't remember where you were.</strong></p></div></div></div></section>
 
@@ -377,9 +444,29 @@
         </p>
         <div class="tile" style="margin-top:2rem"><p style="font-family:'Courier New',Courier,monospace;font-size:.8rem;letter-spacing:.08em;color:var(--text-variant);opacity:.6;margin-bottom:.75rem;text-transform:uppercase">Instead of asking</p><p style="font-size:1.2rem;font-weight:450;font-stretch:90%;letter-spacing:.04em;color:var(--text-variant)">&ldquo;Where is the file?&rdquo;</p><p style="font-family:'Courier New',Courier,monospace;font-size:.8rem;letter-spacing:.08em;color:var(--accent);margin-top:1.5rem;margin-bottom:.75rem;text-transform:uppercase">You ask</p><p style="font-size:1.2rem;font-weight:500;font-stretch:85%;letter-spacing:.03em;color:var(--text)">&ldquo;Where was I?&rdquo;</p></div><p class="section-body" style="margin-top:1.5rem">And Onin helps you continue.</p></div></div></div></section>
 
-    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Imagine this.</h2></div><div><p class="section-body">You stop working on a project.</p><p class="section-body">For an hour.</p><p class="section-body">For a day.</p><p class="section-body">For a week.</p><p class="section-body" style="margin-top:.9rem">Then you come back.</p><p class="section-body">No digging through folders.</p><p class="section-body">No reopening dozens of tabs.</p><p class="section-body">No retracing your steps.</p><p class="section-body">No mental warm-up.</p><p class="section-body" style="margin-top:.9rem"><strong>You simply continue.</strong></p></div></div></div></section>
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">What changes<br>for you.</h2></div><div>
+        <div class="benefit-stack">
+            <div class="benefit">
+                <span class="b-key">Close everything</span>
+                <p class="b-title">Shut it all down without fear.</p>
+                <p class="b-desc">Onin saves the whole state of a project — windows, open files, browser tabs, even how far you'd scrolled. Turn everything off. Come back. Nothing moved.</p>
+            </div>
+            <div class="benefit">
+                <span class="b-key">Switch in seconds</span>
+                <p class="b-title">Change projects with one move.</p>
+                <p class="b-desc">Leave one project, open another, and its entire environment is back where you left it. No reopening, no reorganizing, no warm-up.</p>
+            </div>
+            <div class="benefit">
+                <span class="b-key">Find by content</span>
+                <p class="b-title">Search what you wrote, not where you put it.</p>
+                <p class="b-desc">Type a sentence you remember. Onin finds it inside your PDFs, Word and Excel files, slides and code — by their contents, not their names.</p>
+            </div>
+        </div>
+    </div></div></div></section>
 
     <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Built for people whose<br>work depends on momentum.</h2></div><div><ul class="audience-list"><li>&lt;/&gt; Developers.</li><li>∑ Researchers.</li><li>△ Founders.</li><li>◇ Consultants.</li><li>◈ Analysts.</li><li>✦ Designers.</li><li>✎ Writers.</li><li>◎ Students.</li></ul><p class="section-body" style="margin-top:1rem">Anyone managing complex work across interruptions.</p></div></div></div></section>
+
+    <section class="section"><div class="section-inner"><div class="two-col"><div><h2 class="section-heading">Private<br>by design.</h2></div><div><p class="section-body">Onin runs on your machine, for your machine.</p><p class="section-body">It indexes only your user folder — never system files — and everything it remembers stays local.</p><p class="section-body"><strong>Your work never leaves your computer.</strong></p><p class="trust-note"><span class="ok">✓</span> Runs locally on Windows<br><span class="ok">✓</span> No account required to start<br><span class="ok">✓</span> Your files are never uploaded</p></div></div></div></section>
 
     <!-- CTA -->
     <section class="cta-section" id="waitlist">
@@ -392,7 +479,7 @@
                     <p class="section-body" style="margin-bottom:1.5rem">It's time it remembered your work.</p>
                     <form class="waitlist-form" onsubmit="event.preventDefault();handleSubmit(this)">
                         <input type="email" class="waitlist-input" placeholder="Email Address" required aria-label="Email address">
-                        <button type="submit" class="btn btn-primary">Request Early Access</button>
+                        <button type="submit" class="btn btn-primary">Join the waitlist</button>
                     </form>
                     <p class="system" style="font-size:.7rem;color:var(--text-variant);opacity:.5;margin-top:1rem;letter-spacing:.06em;line-height:1.7">
                         Limited early access.<br>
@@ -400,6 +487,7 @@
                         Just an invitation when Onin is ready.
                     </p>
                     <p id="wc" style="display:none;font-family:'Courier New',Courier,monospace;font-size:.8rem;color:var(--accent);margin-top:1rem;letter-spacing:.04em">✓ You're on the list. Thank you.</p>
+                    <p id="we" class="form-error"></p>
                 </div>
             </div>
         </div>
@@ -430,6 +518,7 @@
             html.setAttribute('data-theme', theme);
             themeIcon.textContent = theme === 'dark' ? '☀' : '☾';
             localStorage.setItem('onin-theme', theme);
+            window.__oninRedraw?.();
         });
     });
 
@@ -437,9 +526,14 @@
         const input=form.querySelector('input');
         const button=form.querySelector('button');
         const success=document.getElementById('wc');
+        const errorEl=document.getElementById('we');
         const email=input.value.trim();
 
-        if(!email || !email.includes('@')) return;
+        if(errorEl) errorEl.style.display='none';
+        if(!email || !email.includes('@')){
+            if(errorEl){errorEl.textContent='Please enter a valid email address.';errorEl.style.display='block';}
+            return;
+        }
 
         button.disabled=true;
         button.textContent='Adding...';
@@ -453,7 +547,11 @@
                 body:JSON.stringify({email})
             });
 
-            if(!res.ok) throw new Error('Request failed');
+            if(!res.ok){
+                let msg='Something went wrong. Please try again.';
+                try{const data=await res.json();if(data&&data.error)msg=data.error;}catch{}
+                throw new Error(msg);
+            }
 
             input.value='';
             success.style.display='block';
@@ -462,17 +560,18 @@
 
             setTimeout(()=>{
                 success.style.display='none';
-                button.textContent='Request Early Access';
+                button.textContent='Join the waitlist';
                 button.disabled=false;
                 button.style.opacity='1';
             },4000);
 
         }catch(err){
             console.error(err);
+            if(errorEl){errorEl.textContent=err.message||'Try again.';errorEl.style.display='block';}
             button.textContent='Try Again';
 
             setTimeout(()=>{
-                button.textContent='Request Early Access';
+                button.textContent='Join the waitlist';
                 button.disabled=false;
             },2000);
         }
@@ -634,18 +733,20 @@ return vec4f(clamp(col,vec3f(0),vec3f(1)),1);
         const h=Math.max(1,Math.floor(cnv.clientHeight));
         if(cnv.width!==w||cnv.height!==h){cnv.width=w;cnv.height=h;}
     }
-    window.addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(rs,150);});
+    window.addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{rs();if(reduceMQ.matches)requestAnimationFrame(ff);},150);});
     rs();
 
     const st=performance.now();
     const d=new Float32Array(16);
+    const reduceMQ=window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function ff(){
         rs();
-        const time=(performance.now()-st)/1000+rto;
+        const reduce=reduceMQ.matches;
+        const time=reduce?18.0:(performance.now()-st)/1000+rto;
         mx+=(tmx-mx)*.06;my+=(tmy-my)*.06;
         d[0]=cnv.width;d[1]=cnv.height;d[2]=time;d[3]=1;
-        d[4]=mx;d[5]=my;
+        d[4]=reduce?.5:mx;d[5]=reduce?.5:my;
         d[6]=html.getAttribute('data-theme')==='light'?1:0;
         dev.queue.writeBuffer(ub,0,d.buffer);
         const enc=dev.createCommandEncoder();
@@ -653,8 +754,11 @@ return vec4f(clamp(col,vec3f(0),vec3f(1)),1);
         const pass=enc.beginRenderPass({colorAttachments:[{view:ctx.getCurrentTexture().createView(),clearValue:isL?{r:.800,g:.812,b:.839,a:1}:{r:.031,g:.031,b:.063,a:1},loadOp:'clear',storeOp:'store'}]});
         pass.setPipeline(pipe);pass.setBindGroup(0,bg);pass.draw(3);pass.end();
         dev.queue.submit([enc.finish()]);
-        requestAnimationFrame(ff);
+        if(!reduce)requestAnimationFrame(ff);
     }
+    // expose a one-shot redraw so the paused canvas can repaint on theme/resize
+    window.__oninRedraw=()=>requestAnimationFrame(ff);
+    reduceMQ.addEventListener?.('change',()=>requestAnimationFrame(ff));
     requestAnimationFrame(ff);
     }
     init().catch(e=>{console.error(e);document.getElementById('fb')?.classList.add('visible')});
